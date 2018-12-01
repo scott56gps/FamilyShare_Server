@@ -36,6 +36,33 @@ app.get('/available', async (request, response) => {
     }
 })
 
+app.get('/login/:username', async (request, response) => {
+    try {
+        var username = request.params.username
+
+        const client = await pool.connect()
+
+        // Query the username that came through
+        const result = await client.query(`SELECT * FROM 'user' WHERE username = '${username}'`)
+        
+        if (length(result.rows) > 0 && result.rows[0]['username'] == username) {
+            console.log('User found!')
+
+            var userId = result.rows[0]['user_id']
+
+            var stringifiedUserId = JSON.stringify(userId)
+
+            response.send(stringifiedUserId)
+        } else {
+            response.send('User not found')
+        }
+        client.release()
+    } catch (err) {
+        console.error(err);
+        response.send("Error " + err);
+    }
+})
+
 app.listen(port, () => {
     console.log(`Server now listening on port ${port}`)
 })
