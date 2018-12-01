@@ -45,7 +45,7 @@ app.get('/login/:username', async (request, response) => {
         // Query the username that came through
         const result = await client.query(`SELECT * FROM "user" WHERE username = '${username}'`)
         
-        if (length(result.rows) > 0 && result.rows[0]['username'] == username) {
+        if (result.rows.length > 0 && result.rows[0]['username'] == username) {
             console.log('User found!')
 
             var userId = result.rows[0]['user_id']
