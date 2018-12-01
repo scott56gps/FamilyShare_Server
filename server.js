@@ -24,6 +24,18 @@ app.get('/exampleQuery', async (request, response) => {
     }
 })
 
+app.get('/available', async (request, response) => {
+    try {
+        const client = await pool.connect()
+        const result = await client.query("SELECT * FROM ancestor WHERE user_id IS NULL");
+        response.send(result.rows[0])
+        client.release()
+    } catch (err) {
+        console.error(err);
+        response.send("Error " + err);
+    }
+})
+
 app.listen(port, () => {
     console.log(`Server now listening on port ${port}`)
 })
