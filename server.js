@@ -15,7 +15,7 @@ app.get('/', (request, response) => {
 app.get('/exampleQuery', async (request, response) => {
     try {
         const client = await pool.connect()
-        const result = await client.query('SELECT * FROM user');
+        const result = await client.query('SELECT * FROM "user"');
         response.send(result.rows)
         client.release()
     } catch (err) {
