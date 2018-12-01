@@ -21,3 +21,7 @@ app.get('/exampleQuery', async (request, response) => {
         response.send("Error " + err);
     }
 })
+
+app.listen(port, () => {
+    console.log(`Server now listening on port ${port}`)
+})
