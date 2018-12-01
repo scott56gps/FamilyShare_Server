@@ -16,7 +16,7 @@ app.get('/exampleQuery', async (request, response) => {
     try {
         const client = await pool.connect()
         const result = await client.query('SELECT user_id FROM "user" WHERE user_id = 1');
-        response.send(result.rows[0]['user_id'])
+        response.send(result.rows[0])
         client.release()
     } catch (err) {
         console.error(err);
