@@ -52,7 +52,7 @@ app.get('/reserve/:ancestorId/:userId', async (request, response) => {
             var fsId = result.rows[0]['fs_id']
 
             // Reserve the ancestor by updating the user_id column for this ancestorId
-            const updateResult = await client.query(`UPDATE ancestor SET user_id = ${userId}`)
+            const updateResult = await client.query(`UPDATE ancestor SET user_id = ${userId} WHERE ancestor_id = ${ancestorId}`)
 
             // Retrieve the PDF for this fs_id
 
