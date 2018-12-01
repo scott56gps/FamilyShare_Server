@@ -47,7 +47,7 @@ app.get('/reserve/:ancestorId/:userId', async (request, response) => {
         const result = await client.query(`SELECT fs_id FROM ancestor WHERE ancestor_id = ${ancestorId}`)
 
         // First, reserve the ancestor for this user
-        if (result.rows.length == 1 && userid != undefined) {
+        if (result.rows.length == 1 && userId != undefined) {
             console.log('We found the fs_id for the requested ancestor!')
             var fsId = result.rows[0]['fs_id']
 
