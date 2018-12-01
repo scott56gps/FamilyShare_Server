@@ -27,8 +27,40 @@ app.get('/exampleQuery', async (request, response) => {
 app.get('/available', async (request, response) => {
     try {
         const client = await pool.connect()
-        const result = await client.query("SELECT * FROM ancestor WHERE user_id IS NULL");
+        const result = await client.query("SELECT * FROM ancestor WHERE user_id IS NULL")
         response.send(result.rows)
+        client.release()
+    } catch (err) {
+        console.error(err);
+        response.send("Error " + err);
+    }
+})
+
+app.put('/reserve/:ancestorId/:userId', async (request, response) => {
+    try {
+        const ancestorId = request.params.ancestorId
+        const userId = request.params.userId
+
+        const client = await pool.connect()
+
+        // Query the ancestorId that came through
+        const result = await client.query(`SELECT fs_id FROM ancestor WHERE ancestor_id = ${ancestorId}`)
+
+        // First, reserve the ancestor for this user
+        if (result.rows.length == 1 && userid != undefined) {
+            console.log('We found the fs_id for the requested ancestor!')
+            var fsId = result.rows[0]['fs_id']
+
+            // Reserve the ancestor by updating the user_id column for this ancestorId
+            const updateResult = await client.query(`UPDATE ancestor SET user_id = ${userId}`)
+
+            // Retrieve the PDF for this fs_id
+
+            // Send the PDF back to the client
+            response.send(`Ancestor ${fsId} reserved successfully`)
+        } else {
+            response.send('Either ancestorId not found or userId was undefined')
+        }
         client.release()
     } catch (err) {
         console.error(err);
