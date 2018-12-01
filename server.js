@@ -43,7 +43,7 @@ app.get('/login/:username', async (request, response) => {
         const client = await pool.connect()
 
         // Query the username that came through
-        const result = await client.query(`SELECT * FROM 'user' WHERE username = '${username}'`)
+        const result = await client.query(`SELECT * FROM "user" WHERE username = '${username}'`)
         
         if (length(result.rows) > 0 && result.rows[0]['username'] == username) {
             console.log('User found!')
