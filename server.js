@@ -6,6 +6,8 @@ const pool =  new Pool({
     ssl: true
 })
 
+const port = process.env.PORT || 5000;
+
 app.get('/', (request, response) => {
     response.send("Welcome to the App!  This is an example database querying app with the potential to become the production server")
 })
