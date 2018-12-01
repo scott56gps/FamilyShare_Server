@@ -36,7 +36,7 @@ app.get('/available', async (request, response) => {
     }
 })
 
-app.put('/reserve/:ancestorId/:userId', async (request, response) => {
+app.get('/reserve/:ancestorId/:userId', async (request, response) => {
     try {
         const ancestorId = request.params.ancestorId
         const userId = request.params.userId
