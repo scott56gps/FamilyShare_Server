@@ -28,6 +28,7 @@ app.get('/available', async (request, response) => {
     try {
         const client = await pool.connect()
         const result = await client.query("SELECT * FROM ancestor WHERE user_id IS NULL")
+        console.log(result.rows)
         response.send(result.rows)
         client.release()
     } catch (err) {
