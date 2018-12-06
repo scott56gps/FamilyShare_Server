@@ -48,8 +48,8 @@ app.post('/createUser', async (request, response) => {
     
     try {
         const client = await pool.connect()
-        await client.query(`INSERT INTO "user"(username) VALUES (${username})`)
-        const result = await client.query(`SELECT user_id FROM "user" WHERE username = ${username}`)
+        const result = await client.query(`INSERT INTO "user"(username) VALUES (${username})`)
+        //const result = await client.query(`SELECT user_id FROM "user" WHERE username = ${username}`)
         console.log(result.rows)
         response.send(result.rows)
         client.release()
