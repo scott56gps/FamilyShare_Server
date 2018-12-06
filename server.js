@@ -43,12 +43,20 @@ app.get('/available', async (request, response) => {
     }
 })
 
-app.post('/createUser', (request, response) => {
+app.post('/createUser', async (request, response) => {
     var username = request.body.username
     
-    console.log("got username:", username)
-
-    response.send("Got Username " + username)
+    try {
+        const client = await pool.connect()
+        await client.query(`INSERT INTO "user"(username) VALUES (${username})`)
+        const result = await client.query(`SELECT user_id FROM "user" WHERE username = ${username}`)
+        console.log(result.rows)
+        response.send(result.rows)
+        client.release()
+    } catch (err) {
+        console.error(err)
+        response.send("Error " + err)
+    }
 })
 
 app.get('/reserve/:ancestorId/:userId', async (request, response) => {
