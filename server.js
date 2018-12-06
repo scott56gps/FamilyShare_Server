@@ -44,7 +44,7 @@ app.get('/available', async (request, response) => {
 })
 
 app.post('/createUser', (request, response) => {
-    var username = request.body
+    var username = request.body.username
     
     console.log("got username:", username)
 
