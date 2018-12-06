@@ -1,10 +1,16 @@
 const express = require('express')
 const app = express()
+
+// Configure Postgres
 const { Pool } = require('pg')
 const pool =  new Pool({
     connectionString: process.env.DATABASE_URL,
     ssl: true
 })
+
+// Configure body-parser
+const bodyParser = require('body-parser')
+app.use(bodyParser.json())
 
 const port = process.env.PORT || 5000;
 
@@ -35,6 +41,12 @@ app.get('/available', async (request, response) => {
         console.error(err);
         response.send("Error " + err);
     }
+})
+
+app.post('/createUser', (request, response) => {
+    var username = request.body.username
+    
+    console.log("got username:", username)
 })
 
 app.get('/reserve/:ancestorId/:userId', async (request, response) => {
