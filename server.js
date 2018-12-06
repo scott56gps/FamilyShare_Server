@@ -44,9 +44,11 @@ app.get('/available', async (request, response) => {
 })
 
 app.post('/createUser', (request, response) => {
-    var username = request.body.username
+    var username = request.body
     
     console.log("got username:", username)
+
+    response.send("Got Username " + username)
 })
 
 app.get('/reserve/:ancestorId/:userId', async (request, response) => {
