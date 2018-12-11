@@ -10,6 +10,14 @@ const pool =  new Pool({
     ssl: true
 })
 
+// Configure AWS authentication
+aws.config.update({
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID || awsAccessKeyId,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || awsSecretAccessKey
+})
+
+const s3 = new aws.S3()
+
 // Configure body-parser
 const bodyParser = require('body-parser')
 app.use(bodyParser.json())
