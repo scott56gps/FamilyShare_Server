@@ -31,6 +31,32 @@ const upload = multer({
 
 const port = process.env.PORT || 5000;
 
+function savePdfToAWS(data, callback) {
+    var params = {
+        Bucket: process.env.S3_BUCKET_NAME || bucketName,
+        Key: data.key,
+        Body: data.value,
+        ContentType: 'application/pdf'
+    }
+
+    s3.upload(params, (error, data) => {
+        if (error) {
+            console.log(error)
+            callback(error, undefined)
+        }
+
+        console.log("Data uploaded to:", data.Location)
+        callback(undefined, 'Data uploaded to: ' + data.Location)
+    })
+}
+
+function makeTempleCardTransferObject(value, key) {
+    return {
+        key: key,
+        value: value
+    }
+}
+
 app.get('/', (request, response) => {
     response.send("Welcome to the App!  This is an example database querying app with the potential to become the production server")
 })
@@ -79,8 +105,24 @@ app.post('/createUser', async (request, response) => {
 app.post('/share', upload.single('templePdf'), async (request, response) => {
     console.log(request.body.givenNames)
     console.log(request.body.surname)
+    console.log(request.body.familySearchId)
+    console.log(request.body.ordinanceNeeded)
 
-    response.send('Success!')
+    // Ensure request is valid
+
+    // Put Ancestor in the database
+
+    // Put Temple Card in File Storage
+    var templeCardDto = makeTempleCardTransferObject(request.file.buffer, `${request.body.familySearchId}.pdf`)
+    savePdfToAWS(templeCardDto, (err, res) => {
+        if (err) {
+            console.log("ERROR in saving Temple Card to AWS:", err)
+            response.send(err)
+            return
+        }
+
+        response.send(res)
+    })
 })
 
 app.get('/reserve/:ancestorId/:userId', async (request, response) => {
