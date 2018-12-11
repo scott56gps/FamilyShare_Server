@@ -103,26 +103,45 @@ app.post('/createUser', async (request, response) => {
 })
 
 app.post('/share', upload.single('templePdf'), async (request, response) => {
-    console.log(request.body.givenNames)
-    console.log(request.body.surname)
-    console.log(request.body.familySearchId)
-    console.log(request.body.ordinanceNeeded)
+    var givenNames = request.body.givenNames
+    var surname = request.body.surname
+    var familySearchId = request.body.familySearchId
+    var ordinanceNeeded = request.body.ordinanceNeeded
 
     // Ensure request is valid
 
-    // Put Ancestor in the database
+    try {
+        // Put Ancestor in the database
+        const client = await pool.connect()
+        await client.query('INSERT INTO ancestor(given_name, surname, ordinance_needed, user_id, fs_id) ' +
+                                        'VALUES ' +
+                                        `'${givenNames}', '${surname}', '${ordinanceNeeded}', NULL, '${familySearchId}'` +
+                                        ');')
+     
+        // Check to see if the ancestor was saved correctly in the database
+        const result = client.query(`SELECT * FROM ancestor WHERE fs_id = '${familySearchId}'`)
+        client.release()
 
-    // Put Temple Card in File Storage
-    var templeCardDto = makeTempleCardTransferObject(request.file.buffer, `${request.body.familySearchId}.pdf`)
-    savePdfToAWS(templeCardDto, (err, res) => {
-        if (err) {
-            console.log("ERROR in saving Temple Card to AWS:", err)
-            response.send(err)
+        if (result.rows.length == 0) {
+            // Send a response with an error that the record was not found after trying to insert
+            response.send('ERROR: There was an error in saving the ancestor to the database')
             return
         }
 
-        response.send(res)
-    })
+        // Put Temple Card in File Storage
+        var templeCardDto = makeTempleCardTransferObject(request.file.buffer, `${request.body.familySearchId}.pdf`)
+        savePdfToAWS(templeCardDto, (err, res) => {
+            if (err) {
+                console.log("ERROR in saving Temple Card to AWS:", err)
+                response.send(err)
+                return
+            }
+
+            response.send(res)
+        })
+    } catch (err) {
+
+    }
 })
 
 app.get('/reserve/:ancestorId/:userId', async (request, response) => {
