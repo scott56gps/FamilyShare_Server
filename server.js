@@ -124,7 +124,7 @@ app.post('/share', upload.single('templePdf'), async (request, response) => {
                                         ');')
      
         // Check to see if the ancestor was saved correctly in the database
-        const result = client.query(`SELECT * FROM ancestor WHERE fs_id = '${familySearchId}'`)
+        const result = client.query(`SELECT * FROM ancestor WHERE fs_id = '${familySearchId}';`)
         client.release()
 
         if (result.rows.length == 0) {
