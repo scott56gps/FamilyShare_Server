@@ -145,7 +145,7 @@ app.post('/share', upload.single('templePdf'), async (request, response) => {
     }
 })
 
-app.get('/reserve/:ancestorId/:userId', async (request, response) => {
+app.post('/reserve/:ancestorId/:userId', async (request, response) => {
     try {
         const ancestorId = request.params.ancestorId
         const userId = request.params.userId
@@ -153,7 +153,7 @@ app.get('/reserve/:ancestorId/:userId', async (request, response) => {
         const client = await pool.connect()
 
         // Query the ancestorId that came through
-        const result = await client.query(`SELECT fs_id FROM ancestor WHERE ancestor_id = ${ancestorId}`)
+        const result = await client.query(`SELECT fs_id FROM ancestor WHERE ancestor_id = ${ancestorId} AND user_id IS NULL`)
 
         // First, reserve the ancestor for this user
         if (result.rows.length == 1 && userId != undefined) {
@@ -162,8 +162,6 @@ app.get('/reserve/:ancestorId/:userId', async (request, response) => {
 
             // Reserve the ancestor by updating the user_id column for this ancestorId
             const updateResult = await client.query(`UPDATE ancestor SET user_id = ${userId} WHERE ancestor_id = ${ancestorId}`)
-
-            // Retrieve the PDF for this fs_id
 
             // Send the PDF back to the client
             response.send(`Ancestor ${fsId} reserved successfully`)
@@ -176,6 +174,10 @@ app.get('/reserve/:ancestorId/:userId', async (request, response) => {
         response.send("Error " + err);
     }
 })
+
+// app.get('/templeCard/:ancestorId', async (request, response) => {
+
+// })
 
 app.get('/login/:username', async (request, response) => {
     try {
