@@ -113,11 +113,6 @@ app.post('/share', upload.single('templePdf'), async (request, response) => {
     try {
         // Put Ancestor in the database
         const client = await pool.connect()
-        var query = 'INSERT INTO ancestor(given_name, surname, ordinance_needed, user_id, fs_id) ' +
-        'VALUES ' +
-        `'${givenNames}', '${surname}', '${ordinanceNeeded}', NULL, '${familySearchId}'` +
-        ');'
-        console.log(query)
         await client.query('INSERT INTO ancestor(given_name, surname, ordinance_needed, user_id, fs_id) ' +
                                         'VALUES ' +
                                         `('${givenNames}', '${surname}', '${ordinanceNeeded}', NULL, '${familySearchId}'` +
