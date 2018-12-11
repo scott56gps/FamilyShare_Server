@@ -117,16 +117,7 @@ app.post('/share', upload.single('templePdf'), async (request, response) => {
                                         'VALUES ' +
                                         `('${givenNames}', '${surname}', '${ordinanceNeeded}', NULL, '${familySearchId}'` +
                                         ');')
-     
-        // Check to see if the ancestor was saved correctly in the database
-        const result = client.query(`SELECT * FROM ancestor WHERE fs_id = '${familySearchId}';`)
         client.release()
-
-        if (result.rows.length == 0) {
-            // Send a response with an error that the record was not found after trying to insert
-            response.send('ERROR: There was an error in saving the ancestor to the database')
-            return
-        }
 
         // Put Temple Card in File Storage
         var templeCardDto = makeTempleCardTransferObject(request.file.buffer, `${request.body.familySearchId}.pdf`)
