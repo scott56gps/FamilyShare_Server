@@ -1,4 +1,5 @@
 const express = require('express')
+const multer = require('multer')
 const app = express()
 
 // Configure Postgres
@@ -11,6 +12,11 @@ const pool =  new Pool({
 // Configure body-parser
 const bodyParser = require('body-parser')
 app.use(bodyParser.json())
+
+// Configure Multer
+const upload = multer({
+    storage: storage
+})
 
 const port = process.env.PORT || 5000;
 
@@ -57,6 +63,13 @@ app.post('/createUser', async (request, response) => {
         console.error(err)
         response.send("Error " + err)
     }
+})
+
+app.post('/share', upload.single('templePdf'), async (request, response) => {
+    console.log(request.body.givenNames)
+    console.log(request.body.surname)
+
+    response.send('Success!')
 })
 
 app.get('/reserve/:ancestorId/:userId', async (request, response) => {
