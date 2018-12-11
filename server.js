@@ -140,7 +140,7 @@ app.post('/share', upload.single('templePdf'), async (request, response) => {
             response.send(res)
         })
     } catch (err) {
-        consoe.log(err)
+        console.log(err)
         response.send(err)
     }
 })
