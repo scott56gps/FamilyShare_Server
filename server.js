@@ -14,6 +14,8 @@ const bodyParser = require('body-parser')
 app.use(bodyParser.json())
 
 // Configure Multer
+var storage = multer.memoryStorage()
+
 const upload = multer({
     storage: storage
 })
