@@ -1,5 +1,6 @@
 const express = require('express')
 const multer = require('multer')
+const aws = require('aws-sdk')
 const app = express()
 
 // Configure Postgres
