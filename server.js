@@ -120,7 +120,7 @@ app.post('/share', upload.single('templePdf'), async (request, response) => {
         console.log(query)
         await client.query('INSERT INTO ancestor(given_name, surname, ordinance_needed, user_id, fs_id) ' +
                                         'VALUES ' +
-                                        `'${givenNames}', '${surname}', '${ordinanceNeeded}', NULL, '${familySearchId}'` +
+                                        `('${givenNames}', '${surname}', '${ordinanceNeeded}', NULL, '${familySearchId}'` +
                                         ');')
      
         // Check to see if the ancestor was saved correctly in the database
