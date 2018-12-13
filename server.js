@@ -119,9 +119,9 @@ app.post('/share', upload.single('templePdf'), async (request, response) => {
         // Put Ancestor in the database
         const client = await pool.connect()
         await client.query('INSERT INTO ancestor(given_name, surname, ordinance_needed, user_id, fs_id, gender) ' +
-                                        'VALUES ' +
-                                        `('${givenNames}', '${surname}', '${ordinanceNeeded}', NULL, '${familySearchId}'` +
-                                        `'${gender}');`)
+        'VALUES ' +
+        `('${givenNames}', '${surname}', '${ordinanceNeeded}', NULL, '${familySearchId}', ` +
+        `'${gender}');`)
         client.release()
 
         // Put Temple Card in File Storage
