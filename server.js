@@ -175,9 +175,10 @@ app.post('/reserve/:ancestorId/:userId', async (request, response) => {
 
 // })
 
-app.get('/login/:username', async (request, response) => {
+app.get('/login', async (request, response) => {
     try {
-        var username = request.params.username
+        var username = request.body.username
+        console.log('username:', username)
 
         const client = await pool.connect()
 
