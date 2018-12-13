@@ -188,11 +188,11 @@ app.get('/login', async (request, response) => {
         if (result.rows.length > 0 && result.rows[0]['username'] == username) {
             console.log('User found!')
 
-            var userId = result.rows[0]['user_id']
+            //var userId = result.rows[0]['user_id']
 
-            var stringifiedUserId = JSON.stringify(userId)
+            //var stringifiedUserId = JSON.stringify(userId)
 
-            response.send(stringifiedUserId)
+            response.send(result.rows)
         } else {
             response.send('User not found')
         }
