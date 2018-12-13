@@ -179,7 +179,6 @@ app.get('/login/:username', async (request, response) => {
     try {
         var username = request.params.username
         console.log('username:', username)
-        console.log('request:', request)
 
         const client = await pool.connect()
 
@@ -193,6 +192,7 @@ app.get('/login/:username', async (request, response) => {
 
             //var stringifiedUserId = JSON.stringify(userId)
 
+            console.log(result.rows)
             response.send(result.rows)
         } else {
             response.send('User not found')
