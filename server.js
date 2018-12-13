@@ -110,6 +110,10 @@ app.post('/share', upload.single('templePdf'), async (request, response) => {
     var gender = request.body.gender
 
     // Ensure request is valid
+    console.log('INSERT INTO ancestor(given_name, surname, ordinance_needed, user_id, fs_id, gender) ' +
+    'VALUES ' +
+    `('${givenNames}', '${surname}', '${ordinanceNeeded}', NULL, '${familySearchId}', ` +
+    `'${gender}');`)
 
     try {
         // Put Ancestor in the database
