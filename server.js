@@ -57,6 +57,27 @@ function makeTempleCardTransferObject(value, key) {
     }
 }
 
+function loadPdfFromAWS(fsId, callback) {
+    var params = {
+        Bucket: process.env.S3_BUCKET_NAME || bucketName, 
+        Key: `${fsId}.pdf`
+    };
+
+    s3.getObject(params, (error, data) => {
+        if (error) {
+            callback(error)
+        } else {
+            console.log('Got Data!')
+            response.writeHead(200, {
+                'Content-Type': 'application/pdf',
+                'Content-Disposition': `attachment; filename=${fsId}.pdf`,
+                'Content-Length': data.Body.length
+              });
+            callback(undefined, data.Body)
+        }
+    })
+}
+
 app.get('/', (request, response) => {
     response.send("Welcome to the App!  This is an example database querying app with the potential to become the production server")
 })
@@ -175,9 +196,31 @@ app.post('/reserve', upload.none(), async (request, response) => {
     }
 })
 
-// app.get('/templeCard/:ancestorId', async (request, response) => {
+app.get('/templeCard/:userId/:fsId', async (request, response) => {
+    console.log('userId:', request.params.userId)
+    console.log('fsId:', request.params.fsId)
+    var userId = request.params.userId
+    var fsId = request.params.fsId
 
-// })
+    // Check to see if the user is associated with this ancestor
+    try {
+        const client = await pool.connect()
+
+        const result = await client.query(`SELECT * FROM ancestor WHERE user_id = ${userId} AND fs_id = '${fsId}';`)
+    
+        if (result.rows.length == 1) {
+            // Proceed with the download
+            loadPdfFromAWS(fsId, (err, data) => {
+                response.send(data)
+            })
+        } else {
+            response.send('ERROR: User is not associated with this ancestor')
+        }
+    } catch (err) {
+        console.error(err)
+        response.send("Error " + err)
+    }
+})
 
 app.get('/login/:username', async (request, response) => {
     try {
