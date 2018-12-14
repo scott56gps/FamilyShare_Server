@@ -211,21 +211,29 @@ app.post('/reserve', upload.none(), async (request, response) => {
     }
 })
 
-app.get('/templeCard/:userId/:fsId', async (request, response) => {
+app.get('/templeCard/:userId/:ancestorId', async (request, response) => {
     console.log('userId:', request.params.userId)
-    console.log('fsId:', request.params.fsId)
+    console.log('ancestorId:', request.params.ancestorId)
     var userId = request.params.userId
-    var fsId = request.params.fsId
+    var ancestorId = request.params.ancestorId
 
     // Check to see if the user is associated with this ancestor
     try {
         const client = await pool.connect()
 
-        const result = await client.query(`SELECT * FROM ancestor WHERE user_id = ${userId} AND fs_id = '${fsId}';`)
+        const result = await client.query(`SELECT * FROM ancestor WHERE user_id = ${userId} AND id = ${ancestorId};`)
+        
+        client.release()
     
+        var fsId = result.rows[0]['fs_id']
+        console.log('fs_id', fsId)
         if (result.rows.length == 1) {
             // Proceed with the download
             loadPdfFromAWS(fsId, (err, data) => {
+                if (err) {
+                    console.log(err)
+                    response.send(err)
+                }
                 response.send(data)
             })
         } else {
