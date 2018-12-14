@@ -68,11 +68,6 @@ function loadPdfFromAWS(fsId, callback) {
             callback(error)
         } else {
             console.log('Got Data!')
-            response.writeHead(200, {
-                'Content-Type': 'application/pdf',
-                'Content-Disposition': `attachment; filename=${fsId}.pdf`,
-                'Content-Length': data.Body.length
-              });
             callback(undefined, data.Body)
         }
     })
@@ -229,12 +224,18 @@ app.get('/templeCard/:userId/:ancestorId', async (request, response) => {
             // Proceed with the download
             loadPdfFromAWS(fsId, (err, data) => {
                 if (err) {
+                    console.log("ERROR!")
                     console.log(err)
-                    response.send(err)
                     client.release()
+                    response.send(err)
                 }
-                response.end(data)
+                response.writeHead(200, {
+                    'Content-Type': 'application/pdf',
+                    'Content-Disposition': `attachment; filename=${fsId}.pdf`,
+                    'Content-Length': data.Body.length
+                });
                 client.release()
+                response.end(data)
             })
         } else {
             response.send('ERROR: User is not associated with this ancestor')
