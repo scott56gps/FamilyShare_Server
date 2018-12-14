@@ -145,7 +145,7 @@ app.post('/reserve', async (request, response) => {
     try {
         // const ancestorId = request.params.ancestorId
         // const userId = request.params.userId
-        console.log(request.body)
+        console.log(request)
 
         response.send("Finished request")
 
@@ -167,7 +167,7 @@ app.post('/reserve', async (request, response) => {
         // } else {
         //     response.send('Either ancestorId not found or userId was undefined')
         // }
-        client.release()
+        //client.release()
     } catch (err) {
         console.error(err);
         response.send("Error " + err);
