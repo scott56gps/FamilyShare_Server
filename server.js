@@ -141,7 +141,7 @@ app.post('/share', upload.single('templePdf'), async (request, response) => {
     }
 })
 
-app.post('/reserve', async (request, response) => {
+app.post('/reserve', upload.none(), async (request, response) => {
     try {
         // const ancestorId = request.params.ancestorId
         // const userId = request.params.userId
