@@ -107,6 +107,21 @@ app.get('/available', async (request, response) => {
     }
 })
 
+app.get('/reserved/:userId', async (request, response) => {
+    try {
+        var userId = request.params.userId
+
+        const client = await pool.connect()
+        const result = await client.query(`SELECT * FROM ancestor WHERE user_id = ${userId};`)
+        console.log(result.rows)
+        client.release()
+        response.send(result.rows)
+    } catch (err) {
+        console.error(err);
+        response.send("Error " + err);
+    }
+})
+
 app.post('/createUser', async (request, response) => {
     var username = request.body.username
     
