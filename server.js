@@ -141,29 +141,32 @@ app.post('/share', upload.single('templePdf'), async (request, response) => {
     }
 })
 
-app.post('/reserve/:ancestorId/:userId', async (request, response) => {
+app.post('/reserve', async (request, response) => {
     try {
-        const ancestorId = request.params.ancestorId
-        const userId = request.params.userId
+        // const ancestorId = request.params.ancestorId
+        // const userId = request.params.userId
+        console.log(request.body)
 
-        const client = await pool.connect()
+        response.send("Finished request")
 
-        // Query the ancestorId that came through
-        const result = await client.query(`SELECT fs_id FROM ancestor WHERE ancestor_id = ${ancestorId} AND user_id IS NULL`)
+        // const client = await pool.connect()
 
-        // First, reserve the ancestor for this user
-        if (result.rows.length == 1 && userId != undefined) {
-            console.log('We found the fs_id for the requested ancestor!')
-            var fsId = result.rows[0]['fs_id']
+        // // Query the ancestorId that came through
+        // const result = await client.query(`SELECT fs_id FROM ancestor WHERE ancestor_id = ${ancestorId} AND user_id IS NULL`)
 
-            // Reserve the ancestor by updating the user_id column for this ancestorId
-            const updateResult = await client.query(`UPDATE ancestor SET user_id = ${userId} WHERE ancestor_id = ${ancestorId}`)
+        // // First, reserve the ancestor for this user
+        // if (result.rows.length == 1 && userId != undefined) {
+        //     console.log('We found the fs_id for the requested ancestor!')
+        //     var fsId = result.rows[0]['fs_id']
 
-            // Send the PDF back to the client
-            response.send(`Ancestor ${fsId} reserved successfully`)
-        } else {
-            response.send('Either ancestorId not found or userId was undefined')
-        }
+        //     // Reserve the ancestor by updating the user_id column for this ancestorId
+        //     const updateResult = await client.query(`UPDATE ancestor SET user_id = ${userId} WHERE ancestor_id = ${ancestorId}`)
+
+        //     // Send the PDF back to the client
+        //     response.send(`Ancestor ${fsId} reserved successfully`)
+        // } else {
+        //     response.send('Either ancestorId not found or userId was undefined')
+        // }
         client.release()
     } catch (err) {
         console.error(err);
