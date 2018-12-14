@@ -222,8 +222,6 @@ app.get('/templeCard/:userId/:ancestorId', async (request, response) => {
         const client = await pool.connect()
 
         const result = await client.query(`SELECT * FROM ancestor WHERE user_id = ${userId} AND id = ${ancestorId};`)
-        
-        client.release()
     
         var fsId = result.rows[0]['fs_id']
         console.log('fs_id', fsId)
@@ -233,8 +231,10 @@ app.get('/templeCard/:userId/:ancestorId', async (request, response) => {
                 if (err) {
                     console.log(err)
                     response.send(err)
+                    client.release()
                 }
-                response.send(data)
+                response.end(data)
+                client.release()
             })
         } else {
             response.send('ERROR: User is not associated with this ancestor')
