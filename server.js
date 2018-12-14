@@ -153,7 +153,7 @@ app.post('/reserve', upload.none(), async (request, response) => {
         const client = await pool.connect()
 
         // Query the ancestorId that came through
-        const result = await client.query(`SELECT fs_id FROM ancestor WHERE ancestor_id = ${ancestorId} AND user_id IS NULL`)
+        const result = await client.query(`SELECT fs_id FROM ancestor WHERE id = ${ancestorId} AND user_id IS NULL`)
 
         // First, reserve the ancestor for this user
         if (result.rows.length == 1 && userId != undefined) {
@@ -161,7 +161,7 @@ app.post('/reserve', upload.none(), async (request, response) => {
             var fsId = result.rows[0]['fs_id']
 
             // Reserve the ancestor by updating the user_id column for this ancestorId
-            const updateResult = await client.query(`UPDATE ancestor SET user_id = ${userId} WHERE ancestor_id = ${ancestorId}`)
+            const updateResult = await client.query(`UPDATE ancestor SET user_id = ${userId} WHERE id = ${ancestorId}`)
 
             client.release()
             response.send({ "fs_id": fsId })
