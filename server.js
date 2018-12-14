@@ -145,29 +145,30 @@ app.post('/reserve', upload.none(), async (request, response) => {
     try {
         // const ancestorId = request.params.ancestorId
         // const userId = request.params.userId
-        console.log(request.body)
+        console.log(request.body.id)
+        console.log(request.body.userId)
+        var ancestorId = request.body.id
+        var userId = request.body.userId
 
-        response.send(request.body)
+        const client = await pool.connect()
 
-        // const client = await pool.connect()
+        // Query the ancestorId that came through
+        const result = await client.query(`SELECT fs_id FROM ancestor WHERE ancestor_id = ${ancestorId} AND user_id IS NULL`)
 
-        // // Query the ancestorId that came through
-        // const result = await client.query(`SELECT fs_id FROM ancestor WHERE ancestor_id = ${ancestorId} AND user_id IS NULL`)
+        // First, reserve the ancestor for this user
+        if (result.rows.length == 1 && userId != undefined) {
+            console.log('We found the fs_id for the requested ancestor!')
+            var fsId = result.rows[0]['fs_id']
 
-        // // First, reserve the ancestor for this user
-        // if (result.rows.length == 1 && userId != undefined) {
-        //     console.log('We found the fs_id for the requested ancestor!')
-        //     var fsId = result.rows[0]['fs_id']
+            // Reserve the ancestor by updating the user_id column for this ancestorId
+            const updateResult = await client.query(`UPDATE ancestor SET user_id = ${userId} WHERE ancestor_id = ${ancestorId}`)
 
-        //     // Reserve the ancestor by updating the user_id column for this ancestorId
-        //     const updateResult = await client.query(`UPDATE ancestor SET user_id = ${userId} WHERE ancestor_id = ${ancestorId}`)
-
-        //     // Send the PDF back to the client
-        //     response.send(`Ancestor ${fsId} reserved successfully`)
-        // } else {
-        //     response.send('Either ancestorId not found or userId was undefined')
-        // }
-        //client.release()
+            client.release()
+            response.send({ "fs_id": fsId })
+        } else {
+            client.release()
+            response.send({ "Error": "Either the ancestorId or userId was undefined" })
+        }
     } catch (err) {
         console.error(err);
         response.send("Error " + err);
