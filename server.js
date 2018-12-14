@@ -232,7 +232,7 @@ app.get('/templeCard/:userId/:ancestorId', async (request, response) => {
                 response.writeHead(200, {
                     'Content-Type': 'application/pdf',
                     'Content-Disposition': `attachment; filename=${fsId}.pdf`,
-                    'Content-Length': data.Body.length
+                    'Content-Length': data.length
                 });
                 client.release()
                 response.end(data)
