@@ -147,7 +147,7 @@ app.post('/reserve', upload.none(), async (request, response) => {
         // const userId = request.params.userId
         console.log(request.body)
 
-        response.send("Finished request")
+        response.send(request.body)
 
         // const client = await pool.connect()
 
