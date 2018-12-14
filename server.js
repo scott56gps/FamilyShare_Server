@@ -145,7 +145,7 @@ app.post('/reserve', async (request, response) => {
     try {
         // const ancestorId = request.params.ancestorId
         // const userId = request.params.userId
-        console.log(request)
+        console.log(request.body)
 
         response.send("Finished request")
 
