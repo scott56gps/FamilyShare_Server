@@ -117,8 +117,8 @@ app.get('/reserved/:userId', async (request, response) => {
     }
 })
 
-app.post('/createUser', upload.none(), async (request, response) => {
-    var username = request.body.username
+app.post('/createUser/:username', async (request, response) => {
+    var username = request.params.username
     
     try {
         const client = await pool.connect()
