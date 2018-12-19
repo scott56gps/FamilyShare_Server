@@ -129,7 +129,7 @@ app.post('/createUser/:username', async (request, response) => {
         client.release()
     } catch (err) {
         console.error(err)
-        response.send("Error " + err)
+        response.status(500).setHeader('Content-Type', 'application/json').send(JSON.stringify({ error: err }))
     }
 })
 
