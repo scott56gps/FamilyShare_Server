@@ -117,7 +117,7 @@ app.get('/reserved/:userId', async (request, response) => {
     }
 })
 
-app.post('/createUser', async (request, response) => {
+app.post('/createUser', upload.none(), async (request, response) => {
     var username = request.body.username
     
     try {
