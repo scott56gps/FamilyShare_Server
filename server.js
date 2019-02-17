@@ -285,7 +285,6 @@ app.ws('/route1', (ws, request) => {
 
     ws.on('message', (message) => {
         console.log('Here is a message', message);
-        console.log("request:", request);
     });
 
     ws.on('close', (message) => {
@@ -314,8 +313,9 @@ app.ws('/reserve', (ws, request) => {
         ws.send('Connection for reserve is opened');
     });
 
-    ws.on('message', upload.none(), async (request, response) => {
+    ws.on('message', upload.none(), async (message) => {
         console.log('Message received in reserve');
+        console.log('givenNames', message);
         var givenNames = request.body.givenNames
         var surname = request.body.surname
         var familySearchId = request.body.familySearchId
