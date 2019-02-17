@@ -313,8 +313,8 @@ app.ws('/reserve', (ws, request) => {
         ws.send('Connection for reserve is opened');
     });
 
-    ws.on('message', upload.none(), async (request, response) => {
-        console.log('Message received in reserve', request);
+    ws.on('message', (message) => {
+        console.log('Message received in reserve', message);
         // var givenNames = request.body.givenNames
         // var surname = request.body.surname
         // var familySearchId = request.body.familySearchId
