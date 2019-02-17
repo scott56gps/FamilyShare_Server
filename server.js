@@ -2,6 +2,7 @@ const express = require('express')
 const multer = require('multer')
 const aws = require('aws-sdk')
 const app = express()
+var expressWs = require('express-ws')(app);
 
 // Configure Postgres
 const { Pool } = require('pg')
@@ -274,6 +275,36 @@ app.get('/login/:username', async (request, response) => {
         console.error(err);
         response.send("Error " + err);
     }
+})
+
+app.ws('/route1', (ws, request) => {
+    ws.on('open', (message) => {
+        console.log('I just received this message', message);
+        ws.send('Connection for route1 is opened');
+    });
+
+    ws.on('message', (message) => {
+        console.log('Here is a message', message);
+    });
+
+    ws.on('close', (message) => {
+        console.log('Route 1 is closing');
+    })
+})
+
+app.ws('/route2', (ws, request) => {
+    ws.on('open', (message) => {
+        console.log('I just received this message for route2', message);
+        ws.send('Connection for route2 is opened');
+    });
+
+    ws.on('message', (message) => {
+        console.log('Here is a message for route2', message);
+    });
+
+    ws.on('close', (message) => {
+        console.log('Route 2 is closing');
+    })
 })
 
 app.listen(port, () => {
