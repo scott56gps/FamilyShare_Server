@@ -315,42 +315,42 @@ app.ws('/reserve', (ws, request) => {
 
     ws.on('message', upload.none(), async (request, response) => {
         console.log('Message received in reserve', request);
-        var givenNames = request.body.givenNames
-        var surname = request.body.surname
-        var familySearchId = request.body.familySearchId
-        var ordinanceNeeded = request.body.ordinanceNeeded
-        var gender = request.body.gender
+        // var givenNames = request.body.givenNames
+        // var surname = request.body.surname
+        // var familySearchId = request.body.familySearchId
+        // var ordinanceNeeded = request.body.ordinanceNeeded
+        // var gender = request.body.gender
 
-        // Ensure request is valid
-        console.log('INSERT INTO ancestor(given_name, surname, ordinance_needed, user_id, fs_id, gender) ' +
-        'VALUES ' +
-        `('${givenNames}', '${surname}', '${ordinanceNeeded}', NULL, '${familySearchId}', ` +
-        `'${gender}');`)
+        // // Ensure request is valid
+        // console.log('INSERT INTO ancestor(given_name, surname, ordinance_needed, user_id, fs_id, gender) ' +
+        // 'VALUES ' +
+        // `('${givenNames}', '${surname}', '${ordinanceNeeded}', NULL, '${familySearchId}', ` +
+        // `'${gender}');`)
 
-        try {
-            // Put Ancestor in the database
-            const client = await pool.connect()
-            await client.query('INSERT INTO ancestor(given_name, surname, ordinance_needed, user_id, fs_id, gender) ' +
-            'VALUES ' +
-            `('${givenNames}', '${surname}', '${ordinanceNeeded}', NULL, '${familySearchId}', ` +
-            `'${gender}');`)
-            client.release()
+        // try {
+        //     // Put Ancestor in the database
+        //     const client = await pool.connect()
+        //     await client.query('INSERT INTO ancestor(given_name, surname, ordinance_needed, user_id, fs_id, gender) ' +
+        //     'VALUES ' +
+        //     `('${givenNames}', '${surname}', '${ordinanceNeeded}', NULL, '${familySearchId}', ` +
+        //     `'${gender}');`)
+        //     client.release()
 
-            // Put Temple Card in File Storage
-            var templeCardDto = makeTempleCardTransferObject(request.file.buffer, `${request.body.familySearchId}.pdf`)
-            savePdfToAWS(templeCardDto, (err, res) => {
-                if (err) {
-                    console.log("ERROR in saving Temple Card to AWS:", err)
-                    response.send(err)
-                    return
-                }
+        //     // Put Temple Card in File Storage
+        //     var templeCardDto = makeTempleCardTransferObject(request.file.buffer, `${request.body.familySearchId}.pdf`)
+        //     savePdfToAWS(templeCardDto, (err, res) => {
+        //         if (err) {
+        //             console.log("ERROR in saving Temple Card to AWS:", err)
+        //             response.send(err)
+        //             return
+        //         }
 
-                response.send(res)
-            })
-        } catch (err) {
-            console.log(err)
-            response.send(err)
-        }
+        //         response.send(res)
+        //     })
+        // } catch (err) {
+        //     console.log(err)
+        //     response.send(err)
+        // }
     });
 
     ws.on('close', (message) => {
