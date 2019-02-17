@@ -313,7 +313,7 @@ app.ws('/reserve', (ws, request) => {
         ws.send('Connection for reserve is opened');
     });
 
-    ws.on('message', (message) => {
+    ws.on('message', upload.none(), (message) => {
         console.log('Message received in reserve', message.body);
         // var givenNames = request.body.givenNames
         // var surname = request.body.surname
