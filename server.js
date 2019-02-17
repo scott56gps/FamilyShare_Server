@@ -285,6 +285,7 @@ app.ws('/route1', (ws, request) => {
 
     ws.on('message', (message) => {
         console.log('Here is a message', message);
+        console.log("request:", request);
     });
 
     ws.on('close', (message) => {
@@ -300,6 +301,57 @@ app.ws('/route2', (ws, request) => {
 
     ws.on('message', (message) => {
         console.log('Here is a message for route2', message);
+    });
+
+    ws.on('close', (message) => {
+        console.log('Route 2 is closing');
+    })
+})
+
+app.ws('/reserve', (ws, request) => {
+    ws.on('open', (message) => {
+        console.log('I just received this message for route2', message);
+        ws.send('Connection for reserve is opened');
+    });
+
+    ws.on('message', upload.none(), async (request, response) => {
+        console.log('Message received in reserve');
+        var givenNames = request.body.givenNames
+        var surname = request.body.surname
+        var familySearchId = request.body.familySearchId
+        var ordinanceNeeded = request.body.ordinanceNeeded
+        var gender = request.body.gender
+
+        // Ensure request is valid
+        console.log('INSERT INTO ancestor(given_name, surname, ordinance_needed, user_id, fs_id, gender) ' +
+        'VALUES ' +
+        `('${givenNames}', '${surname}', '${ordinanceNeeded}', NULL, '${familySearchId}', ` +
+        `'${gender}');`)
+
+        try {
+            // Put Ancestor in the database
+            const client = await pool.connect()
+            await client.query('INSERT INTO ancestor(given_name, surname, ordinance_needed, user_id, fs_id, gender) ' +
+            'VALUES ' +
+            `('${givenNames}', '${surname}', '${ordinanceNeeded}', NULL, '${familySearchId}', ` +
+            `'${gender}');`)
+            client.release()
+
+            // Put Temple Card in File Storage
+            var templeCardDto = makeTempleCardTransferObject(request.file.buffer, `${request.body.familySearchId}.pdf`)
+            savePdfToAWS(templeCardDto, (err, res) => {
+                if (err) {
+                    console.log("ERROR in saving Temple Card to AWS:", err)
+                    response.send(err)
+                    return
+                }
+
+                response.send(res)
+            })
+        } catch (err) {
+            console.log(err)
+            response.send(err)
+        }
     });
 
     ws.on('close', (message) => {
