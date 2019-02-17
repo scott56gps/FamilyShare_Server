@@ -314,7 +314,7 @@ app.ws('/reserve', (ws, request) => {
     });
 
     ws.on('message', (message) => {
-        console.log('Message received in reserve', message);
+        console.log('Message received in reserve', message.toString());
 
         var buffer = new Uint8Array(message).buffer;
         var parsed = new DataView(buffer);
