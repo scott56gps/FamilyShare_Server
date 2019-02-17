@@ -314,7 +314,7 @@ app.ws('/reserve', (ws, request) => {
     });
 
     ws.on('message', (message) => {
-        console.log('Message received in reserve', message);
+        console.log('Message received in reserve', message.body);
         // var givenNames = request.body.givenNames
         // var surname = request.body.surname
         // var familySearchId = request.body.familySearchId
