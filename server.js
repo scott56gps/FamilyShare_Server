@@ -308,6 +308,7 @@ app.ws('/route2', (ws, request) => {
 })
 
 app.ws('/reserve', (ws, request) => {
+    var clients = [];
     ws.on('open', (message) => {
         console.log('I just received this message for route2', message);
         ws.send('Connection for reserve is opened');
@@ -315,47 +316,33 @@ app.ws('/reserve', (ws, request) => {
 
     ws.on('message', (message) => {
         console.log('Message received in reserve', message.toString());
+        message = message.toString();
+        console.log(message.id)
+        console.log(message.userId)
+        var ancestorId = message.id
+        var userId = message.userId
 
-        var buffer = new Uint8Array(message).buffer;
-        var parsed = new DataView(buffer);
+        const client = await pool.connect()
 
-        console.log(parsed);
-        // var givenNames = request.body.givenNames
-        // var surname = request.body.surname
-        // var familySearchId = request.body.familySearchId
-        // var ordinanceNeeded = request.body.ordinanceNeeded
-        // var gender = request.body.gender
+        // Query the ancestorId that came through
+        const result = await client.query(`SELECT fs_id FROM ancestor WHERE id = ${ancestorId} AND user_id IS NULL`)
 
-        // // Ensure request is valid
-        // console.log('INSERT INTO ancestor(given_name, surname, ordinance_needed, user_id, fs_id, gender) ' +
-        // 'VALUES ' +
-        // `('${givenNames}', '${surname}', '${ordinanceNeeded}', NULL, '${familySearchId}', ` +
-        // `'${gender}');`)
+        // First, reserve the ancestor for this user
+        if (result.rows.length == 1 && userId != undefined) {
+            console.log('We found the fs_id for the requested ancestor!')
+            var fsId = result.rows[0]['fs_id']
 
-        // try {
-        //     // Put Ancestor in the database
-        //     const client = await pool.connect()
-        //     await client.query('INSERT INTO ancestor(given_name, surname, ordinance_needed, user_id, fs_id, gender) ' +
-        //     'VALUES ' +
-        //     `('${givenNames}', '${surname}', '${ordinanceNeeded}', NULL, '${familySearchId}', ` +
-        //     `'${gender}');`)
-        //     client.release()
+            // Reserve the ancestor by updating the user_id column for this ancestorId
+            const updateResult = await client.query(`UPDATE ancestor SET user_id = ${userId} WHERE id = ${ancestorId}`)
 
-        //     // Put Temple Card in File Storage
-        //     var templeCardDto = makeTempleCardTransferObject(request.file.buffer, `${request.body.familySearchId}.pdf`)
-        //     savePdfToAWS(templeCardDto, (err, res) => {
-        //         if (err) {
-        //             console.log("ERROR in saving Temple Card to AWS:", err)
-        //             response.send(err)
-        //             return
-        //         }
-
-        //         response.send(res)
-        //     })
-        // } catch (err) {
-        //     console.log(err)
-        //     response.send(err)
-        // }
+            client.release()
+            // response.send({ "fs_id": fsId })
+            ws.send({ "fs_id": fsId });
+        } else {
+            client.release()
+            // response.send({ "Error": "Either the ancestorId or userId was undefined" })
+            ws.send({ "Error": "Either the ancestorId or userId was undefined" })
+        }
     });
 
     ws.on('close', (message) => {
