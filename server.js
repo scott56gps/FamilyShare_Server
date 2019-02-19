@@ -314,7 +314,7 @@ app.ws('/reserve', (ws, request) => {
         ws.send('Connection for reserve is opened');
     });
 
-    ws.on('message', (message) => {
+    ws.on('message', async (message) => {
         console.log('Message received in reserve', message.toString());
         message = message.toString();
         console.log(message.id)
