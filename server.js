@@ -327,6 +327,7 @@ app.ws('/reserve', (ws, request) => {
 
         // Add this connection to the array of clients
         index = clients.push(ws);
+        console.log(clients);
         ws.send('Connection for reserve is opened');
     });
 
@@ -369,7 +370,7 @@ app.ws('/reserve', (ws, request) => {
         // clients = clients.splice(index, 1);
         for (var i = 0; i < clients.length; i++) {
             if (clients[i].id == client.id) {
-                clients.splice(i+1, 1);
+                clients.splice(i, 1);
             }
         }
         console.log(clients)
