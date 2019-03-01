@@ -372,6 +372,7 @@ app.ws('/reserve', (ws, request) => {
                 clients.splice(i+1, 1);
             }
         }
+        console.log(clients)
     })
 })
 
