@@ -321,11 +321,12 @@ function sendAll(message, clients) {
 
 app.ws('/reserve', (ws, request) => {
     var clients = [];
+    var index;
     ws.on('open', (message) => {
-        console.log('I just received this message for route2', message);
+        console.log('I just received this message for reserve', message);
 
         // Add this connection to the array of clients
-        clients.push(ws);
+        index = clients.push(ws);
         ws.send('Connection for reserve is opened');
     });
 
@@ -365,7 +366,12 @@ app.ws('/reserve', (ws, request) => {
 
     ws.on('close', (message) => {
         console.log('Route 2 is closing');
-        clients.splice(clients.indexOf(ws), 1);
+        // clients = clients.splice(index, 1);
+        for (var i = 0; i < clients.length; i++) {
+            if (clients[i].id == client.id) {
+                clients.splice(i+1, 1);
+            }
+        }
     })
 })
 
