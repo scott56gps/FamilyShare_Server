@@ -307,10 +307,25 @@ app.ws('/route2', (ws, request) => {
     })
 })
 
+/******************************************************
+ * WEBSOCKET
+ * The following functions are handlers for the Websocket
+ * part of the Application.
+ * ****************************************************/
+
+function sendAll(message, clients) {
+    clients.forEach((client) => {
+        client.send(message);
+    });
+}
+
 app.ws('/reserve', (ws, request) => {
     var clients = [];
     ws.on('open', (message) => {
         console.log('I just received this message for route2', message);
+
+        // Add this connection to the array of clients
+        clients.push(ws);
         ws.send('Connection for reserve is opened');
     });
 
@@ -337,7 +352,10 @@ app.ws('/reserve', (ws, request) => {
 
             client.release()
             // response.send({ "fs_id": fsId })
-            ws.send({ "fs_id": fsId });
+            // ws.send({ "fs_id": fsId });
+            
+            // Tell all the clients to fetch the new data
+            sendAll({"message": "downloadAvailableAncestors"}, clients);
         } else {
             client.release()
             // response.send({ "Error": "Either the ancestorId or userId was undefined" })
@@ -347,6 +365,7 @@ app.ws('/reserve', (ws, request) => {
 
     ws.on('close', (message) => {
         console.log('Route 2 is closing');
+        clients.splice(clients.indexOf(ws), 1);
     })
 })
 
