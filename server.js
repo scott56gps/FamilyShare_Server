@@ -322,7 +322,7 @@ function sendAll(message, clients) {
 app.ws('/reserve', (ws, request) => {
     var clients = [];
     var index;
-    ws.on('open', (message) => {
+    ws.on('connection', (message) => {
         console.log('I just received this message for reserve', message);
 
         // Add this connection to the array of clients
