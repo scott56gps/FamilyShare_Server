@@ -323,7 +323,7 @@ app.ws('/reserve', (ws, request) => {
     var clients = [];
     var index;
     console.log('HELLO!')
-    ws.on('open', (message) => {
+    ws.on('connect', (message) => {
         console.log('I just received this message for reserve', message);
 
         // Add this connection to the array of clients
@@ -334,6 +334,7 @@ app.ws('/reserve', (ws, request) => {
 
     ws.on('message', async (message) => {
         console.log('Message received in reserve', message.toString());
+        console.log(clients);
         message = JSON.parse(message.toString())
         console.log(message.id)
         console.log(message.userId)
