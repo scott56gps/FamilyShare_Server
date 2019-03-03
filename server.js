@@ -324,7 +324,7 @@ app.ws('/reserve', (ws, request) => {
     var index;
     console.log('HELLO!')
     index = clients.push(ws);
-    console.log(clients);
+    console.log(clients.length);
     ws.on('connect', (message) => {
         console.log('I just received this message for reserve', message);
 
