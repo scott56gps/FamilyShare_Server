@@ -371,7 +371,7 @@ app.ws('/reserve', (ws, request) => {
         console.log('Route 2 is closing');
         // clients = clients.splice(index, 1);
         for (var i = 0; i < clients.length; i++) {
-            if (clients[i].id == client.id) {
+            if (clients[i].id == ws.id) {
                 clients.splice(i, 1);
             }
         }
