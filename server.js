@@ -323,12 +323,12 @@ app.ws('/reserve', (ws, request) => {
     var clients = [];
     var index;
     console.log('HELLO!')
+    index = clients.push(ws);
+    console.log(clients);
     ws.on('connect', (message) => {
         console.log('I just received this message for reserve', message);
 
         // Add this connection to the array of clients
-        index = clients.push(ws);
-        console.log(clients);
         ws.send('Connection for reserve is opened');
     });
 
