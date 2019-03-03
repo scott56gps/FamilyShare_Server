@@ -294,7 +294,7 @@ app.ws('/reserve', (ws, request) => {
     console.log('HELLO!')
     index = clients.push(ws);
     console.log(clients.length);
-    ws.on('connection', (message) => {
+    ws.on('open', (message) => {
         console.log('I just received this message for reserve', message);
 
         // Add this connection to the array of clients
@@ -345,6 +345,7 @@ app.ws('/reserve', (ws, request) => {
             }
         }
         console.log(clients)
+        
     })
 })
 
