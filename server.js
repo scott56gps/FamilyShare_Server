@@ -277,42 +277,12 @@ app.get('/login/:username', async (request, response) => {
     }
 })
 
-app.ws('/route1', (ws, request) => {
-    ws.on('open', (message) => {
-        console.log('I just received this message', message);
-        ws.send('Connection for route1 is opened');
-    });
-
-    ws.on('message', (message) => {
-        console.log('Here is a message', message);
-    });
-
-    ws.on('close', (message) => {
-        console.log('Route 1 is closing');
-    })
-})
-
-app.ws('/route2', (ws, request) => {
-    ws.on('open', (message) => {
-        console.log('I just received this message for route2', message);
-        ws.send('Connection for route2 is opened');
-    });
-
-    ws.on('message', (message) => {
-        console.log('Here is a message for route2', message);
-    });
-
-    ws.on('close', (message) => {
-        console.log('Route 2 is closing');
-    })
-})
-
 /******************************************************
  * WEBSOCKET
  * The following functions are handlers for the Websocket
  * part of the Application.
  * ****************************************************/
-
+var clients = [];
 function sendAll(message, clients) {
     clients.forEach((client) => {
         client.send(message);
@@ -320,12 +290,11 @@ function sendAll(message, clients) {
 }
 
 app.ws('/reserve', (ws, request) => {
-    var clients = [];
     var index;
     console.log('HELLO!')
     index = clients.push(ws);
     console.log(clients.length);
-    ws.on('connect', (message) => {
+    ws.on('connection', (message) => {
         console.log('I just received this message for reserve', message);
 
         // Add this connection to the array of clients
