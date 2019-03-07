@@ -294,16 +294,16 @@ app.ws('/reserve', (ws, request) => {
     console.log('HELLO!')
     index = clients.push(ws);
     console.log(clients.length);
-    ws.on('open', (message) => {
-        console.log('I just received this message for reserve', message);
+    // ws.on('connection', (message) => {
+    //     console.log('I just received this message for reserve', message);
 
-        // Add this connection to the array of clients
-        ws.send('Connection for reserve is opened');
-    });
+    //     // Add this connection to the array of clients
+    //     ws.send('Connection for reserve is opened');
+    // });
 
     ws.on('message', async (message) => {
         console.log('Message received in reserve', message.toString());
-        console.log(clients);
+        console.log(clients.length);
         message = JSON.parse(message.toString())
         console.log(message.id)
         console.log(message.userId)
@@ -344,7 +344,7 @@ app.ws('/reserve', (ws, request) => {
                 clients.splice(i, 1);
             }
         }
-        console.log(clients)
+        console.log(clients.length)
         
     })
 })
