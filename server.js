@@ -2,7 +2,6 @@ const express = require('express')
 const multer = require('multer')
 const aws = require('aws-sdk')
 const app = express()
-var expressWs = require('express-ws')(app);
 
 // Configure Postgres
 const { Pool } = require('pg')
@@ -275,78 +274,6 @@ app.get('/login/:username', async (request, response) => {
         console.error(err);
         response.send("Error " + err);
     }
-})
-
-/******************************************************
- * WEBSOCKET
- * The following functions are handlers for the Websocket
- * part of the Application.
- * ****************************************************/
-var clients = [];
-function sendAll(message, clients) {
-    clients.forEach((client) => {
-        client.send(message);
-    });
-}
-
-app.ws('/reserve', (ws, request) => {
-    var index;
-    console.log('HELLO!')
-    index = clients.push(ws);
-    console.log(clients.length);
-    // ws.on('connection', (message) => {
-    //     console.log('I just received this message for reserve', message);
-
-    //     // Add this connection to the array of clients
-    //     ws.send('Connection for reserve is opened');
-    // });
-
-    ws.on('message', async (message) => {
-        console.log('Message received in reserve', message.toString());
-        console.log(clients.length);
-        message = JSON.parse(message.toString())
-        console.log(message.id)
-        console.log(message.userId)
-        var ancestorId = message.id
-        var userId = message.userId
-
-        const client = await pool.connect()
-
-        // Query the ancestorId that came through
-        const result = await client.query(`SELECT fs_id FROM ancestor WHERE id = ${ancestorId} AND user_id IS NULL`)
-
-        // First, reserve the ancestor for this user
-        if (result.rows.length == 1 && userId != undefined) {
-            console.log('We found the fs_id for the requested ancestor!')
-            var fsId = result.rows[0]['fs_id']
-
-            // Reserve the ancestor by updating the user_id column for this ancestorId
-            const updateResult = await client.query(`UPDATE ancestor SET user_id = ${userId} WHERE id = ${ancestorId}`)
-
-            client.release()
-            // response.send({ "fs_id": fsId })
-            // ws.send({ "fs_id": fsId });
-            
-            // Tell all the clients to fetch the new data
-            sendAll({"message": "downloadAvailableAncestors"}, clients);
-        } else {
-            client.release()
-            // response.send({ "Error": "Either the ancestorId or userId was undefined" })
-            ws.send({ "Error": "Either the ancestorId or userId was undefined" })
-        }
-    });
-
-    ws.on('close', (message) => {
-        console.log('Route 2 is closing');
-        // clients = clients.splice(index, 1);
-        for (var i = 0; i < clients.length; i++) {
-            if (clients[i].id == ws.id) {
-                clients.splice(i, 1);
-            }
-        }
-        console.log(clients.length)
-        
-    })
 })
 
 app.listen(port, () => {
