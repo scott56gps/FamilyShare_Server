@@ -1,7 +1,7 @@
 {
-  "name": "postgres-server",
+  "name": "familyshare-server",
   "version": "1.0.0",
-  "description": "Example Application to query a local postgres database.  The goal is to set up the database before I do anything else with it in heroku.\"",
+  "description": "The Server-side for the FamilyShare Application",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
