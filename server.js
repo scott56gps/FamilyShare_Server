@@ -82,7 +82,7 @@ app.get('/', (request, response) => {
 })
 
 app.get('/ancestors', ancestorController.handleGetAvailable);
-app.get('/ancestors/:id', handleGetReserved);
+// app.get('/ancestors/:id', handleGetReserved);
 
 // Middleware
 function logRequest(request, response, next) {
