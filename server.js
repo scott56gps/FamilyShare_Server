@@ -77,6 +77,9 @@ app.get('/', (request, response) => {
     response.send("Welcome to the App!  This is an example database querying app with the potential to become the production server")
 })
 
+app.get('/ancestors', handleGetAvailable);
+app.get('/ancestors/:id', handleGetReserved);
+
 app.get('/exampleQuery', async (request, response) => {
     try {
         const client = await pool.connect()
