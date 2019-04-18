@@ -40,7 +40,7 @@ function getAncestors(userId, callback) {
             };
         } else {
             query = {
-                text: 'SELECT id, given_name, surname, ordinance_needed, gender FROM ancestor'
+                text: 'SELECT id, given_name, surname, ordinance_needed, gender FROM ancestor WHERE user_id = NULL'
             };
         }
 
