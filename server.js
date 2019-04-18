@@ -3,6 +3,9 @@ const multer = require('multer')
 const aws = require('aws-sdk')
 const app = express()
 
+// Bring in the Controllers
+const ancestorController = require('./controllers/ancestorController');
+
 // Configure Postgres
 const { Pool } = require('pg')
 const pool =  new Pool({
@@ -21,6 +24,7 @@ const s3 = new aws.S3()
 // Configure body-parser
 const bodyParser = require('body-parser')
 app.use(bodyParser.json())
+app.use(logRequest);
 
 // Configure Multer
 var storage = multer.memoryStorage()
@@ -77,8 +81,14 @@ app.get('/', (request, response) => {
     response.send("Welcome to the App!  This is an example database querying app with the potential to become the production server")
 })
 
-app.get('/ancestors', handleGetAvailable);
+app.get('/ancestors', ancestorController.handleGetAvailable);
 app.get('/ancestors/:id', handleGetReserved);
+
+// Middleware
+function logRequest(request, response, next) {
+    console.log('Received ' + request.method + ' request for: ' + request.url);
+    next();
+}
 
 app.get('/exampleQuery', async (request, response) => {
     try {
