@@ -84,6 +84,8 @@ app.get('/', (request, response) => {
 app.get('/ancestors', ancestorController.handleGetAvailable);
 app.get('/ancestors/:id', ancestorController.handleGetReserved);
 
+app.post('/createUser');
+
 // Middleware
 function logRequest(request, response, next) {
     console.log('Received ' + request.method + ' request for: ' + request.url);

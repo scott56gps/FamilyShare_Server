@@ -1,33 +1,7 @@
-const format = require('pg-format')
-const { Pool } = require('pg');
-const pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
-    ssl: true
-});
-
-function connectToDatabase(callback) {
-    pool.connect(function (connectError, client, done) {
-        if (connectError) {
-            callback(connectError);
-        }
-
-        callback(null, client, done);
-    });
-}
-
-function queryDatabase(query, client, callback) {
-    // Query the Database
-    client.query(query, function (queryError, queryResult) {
-        if (queryError) {
-            callback(queryError);
-        }
-
-        callback(null, queryResult)
-    })
-}
+const db = require('./dbFunctions');
 
 function getAncestors(userId, callback) {
-    connectToDatabase((connectionError, client, done) => {
+    db.connectToDatabase((connectionError, client, done) => {
         if (connectionError) {
             callback(connectionError);
             return;
@@ -44,7 +18,7 @@ function getAncestors(userId, callback) {
             };
         }
 
-        queryDatabase(query, client, (ancestorErr, ancestorResult) => {
+        db.queryDatabase(query, client, (ancestorErr, ancestorResult) => {
             if (ancestorErr) {
                 done();
                 callback(ancestorErr);
