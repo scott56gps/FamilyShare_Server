@@ -1,4 +1,5 @@
 const ancestorModel = require('../models/ancestorModel');
+const multer = require('multer')
 
 function getAvailableAncestors(request, response) {
     ancestorModel.getAncestors(null, (error, ancestors) => {
