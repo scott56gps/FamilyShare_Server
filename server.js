@@ -13,14 +13,6 @@ const pool =  new Pool({
     ssl: true
 })
 
-// Configure AWS authentication
-aws.config.update({
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID || awsAccessKeyId,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || awsSecretAccessKey
-})
-
-const s3 = new aws.S3()
-
 // Configure body-parser
 const bodyParser = require('body-parser')
 app.use(bodyParser.json())
@@ -34,48 +26,6 @@ const upload = multer({
 })
 
 const port = process.env.PORT || 5000;
-
-function savePdfToAWS(data, callback) {
-    var params = {
-        Bucket: process.env.S3_BUCKET_NAME || bucketName,
-        Key: data.key,
-        Body: data.value,
-        ContentType: 'application/pdf'
-    }
-
-    s3.upload(params, (error, data) => {
-        if (error) {
-            console.log(error)
-            callback(error, undefined)
-        }
-
-        console.log("Data uploaded to:", data.Location)
-        callback(undefined, 'Data uploaded to: ' + data.Location)
-    })
-}
-
-function makeTempleCardTransferObject(value, key) {
-    return {
-        key: key,
-        value: value
-    }
-}
-
-function loadPdfFromAWS(fsId, callback) {
-    var params = {
-        Bucket: process.env.S3_BUCKET_NAME || bucketName, 
-        Key: `${fsId}.pdf`
-    };
-
-    s3.getObject(params, (error, data) => {
-        if (error) {
-            callback(error)
-        } else {
-            console.log('Got Data!')
-            callback(undefined, data.Body)
-        }
-    })
-}
 
 app.get('/', (request, response) => {
     response.send("Welcome to the App!  This is an example database querying app with the potential to become the production server")
@@ -102,45 +52,6 @@ app.get('/exampleQuery', async (request, response) => {
     } catch (err) {
         console.error(err);
         response.send("Error " + err);
-    }
-})
-
-app.post('/share', upload.single('templePdf'), async (request, response) => {
-    var givenNames = request.body.givenNames
-    var surname = request.body.surname
-    var familySearchId = request.body.familySearchId
-    var ordinanceNeeded = request.body.ordinanceNeeded
-    var gender = request.body.gender
-
-    // Ensure request is valid
-    console.log('INSERT INTO ancestor(given_name, surname, ordinance_needed, user_id, fs_id, gender) ' +
-    'VALUES ' +
-    `('${givenNames}', '${surname}', '${ordinanceNeeded}', NULL, '${familySearchId}', ` +
-    `'${gender}');`)
-
-    try {
-        // Put Ancestor in the database
-        const client = await pool.connect()
-        await client.query('INSERT INTO ancestor(given_name, surname, ordinance_needed, user_id, fs_id, gender) ' +
-        'VALUES ' +
-        `('${givenNames}', '${surname}', '${ordinanceNeeded}', NULL, '${familySearchId}', ` +
-        `'${gender}');`)
-        client.release()
-
-        // Put Temple Card in File Storage
-        var templeCardDto = makeTempleCardTransferObject(request.file.buffer, `${request.body.familySearchId}.pdf`)
-        savePdfToAWS(templeCardDto, (err, res) => {
-            if (err) {
-                console.log("ERROR in saving Temple Card to AWS:", err)
-                response.send(err)
-                return
-            }
-
-            response.send(res)
-        })
-    } catch (err) {
-        console.log(err)
-        response.send(err)
     }
 })
 
