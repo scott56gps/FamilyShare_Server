@@ -34,6 +34,8 @@ function postAncestor(request, response) {
         gender: request.body.gender
     }
 
+    console.log('AncestorDTO:', ancestorDto);
+
     // Create a Temple Card DTO
     var templeCardDto = {
         key:`${request.body.familySearchId}.pdf`,
