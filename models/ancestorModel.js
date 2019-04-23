@@ -57,7 +57,7 @@ function createAncestor(ancestorDto, templeCardDto, callback) {
             }
 
             var query = {
-                text: 'INSERT INTO ancestor(given_name, surname, ordinance_needed, user_id, fs_id, gender) VALUES ($1, $2, $3, NULL, $4, $5) RETURNING given_name, surname, ordinance_needed, user_id, fs_id, gender',
+                text: 'INSERT INTO ancestor(given_name, surname, ordinance_needed, user_id, fs_id, gender) VALUES ($1, $2, $3, NULL, $4, $5) RETURNING id, given_name, surname, ordinance_needed, user_id, fs_id, gender',
                 values: [givenNames, surname, ordinanceNeeded, familySearchId, gender]
             }
 
