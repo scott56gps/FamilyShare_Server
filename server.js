@@ -1,6 +1,5 @@
 const express = require('express')
 const multer = require('multer')
-const aws = require('aws-sdk')
 const app = express()
 
 // Bring in the Controllers
@@ -85,6 +84,7 @@ app.get('/', (request, response) => {
 app.get('/ancestors', ancestorController.handleGetAvailable);
 app.get('/ancestors/:id', ancestorController.handleGetReserved);
 
+app.post('/ancestor', upload.single('templePdf'), ancestorController.handlePostAncestor);
 app.post('/createUser', userController.handlePostUser);
 
 // Middleware
@@ -102,51 +102,6 @@ app.get('/exampleQuery', async (request, response) => {
     } catch (err) {
         console.error(err);
         response.send("Error " + err);
-    }
-})
-
-app.get('/available', async (request, response) => {
-    try {
-        const client = await pool.connect()
-        const result = await client.query("SELECT * FROM ancestor WHERE user_id IS NULL")
-        console.log(result.rows)
-        response.send(result.rows)
-        client.release()
-    } catch (err) {
-        console.error(err);
-        response.send("Error " + err);
-    }
-})
-
-app.get('/reserved/:userId', async (request, response) => {
-    try {
-        var userId = request.params.userId
-
-        const client = await pool.connect()
-        const result = await client.query(`SELECT * FROM ancestor WHERE user_id = ${userId};`)
-        console.log(result.rows)
-        client.release()
-        response.send(result.rows)
-    } catch (err) {
-        console.error(err);
-        response.send("Error " + err);
-    }
-})
-
-app.post('/createUser/:username', async (request, response) => {
-    var username = request.params.username
-    
-    try {
-        const client = await pool.connect()
-        await client.query(`INSERT INTO "user"(username) VALUES ('${username}')`)
-        const result = await client.query(`SELECT user_id FROM "user" WHERE username = '${username}'`)
-        console.log(result.rows)
-        response.send(result.rows)
-        client.release()
-    } catch (err) {
-        console.error(err)
-        response.status(500)
-        response.json({"error": err})
     }
 })
 

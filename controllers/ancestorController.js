@@ -25,7 +25,35 @@ function getReservedAncestors(request, response) {
     })
 }
 
+function postAncestor(request, response) {
+    var ancestorDto = {
+        givenNames: request.body.givenNames,
+        surname: request.body.surname,
+        ordinanceNeeded: request.body.ordinanceNeeded,
+        familySearchId: request.body.familySearchId,
+        gender: request.body.gender
+    }
+
+    // Create a Temple Card DTO
+    var templeCardDto = {
+        key:`${request.body.familySearchId}.pdf`,
+        value: request.file.buffer
+    }
+
+    // Put this Ancestor in the database
+    ancestorModel.createAncestor(ancestorDto, templeCardDto, (error, ancestor) => {
+        if (error) {
+            console.error(error);
+            response.status(500).json({ success: false, error: error });
+            return;
+        }
+
+        response.json(ancestor);
+    })
+}
+
 module.exports = {
     handleGetAvailable: getAvailableAncestors,
-    handleGetReserved: getReservedAncestors
+    handleGetReserved: getReservedAncestors,
+    handlePostAncestor: postAncestor
 }
