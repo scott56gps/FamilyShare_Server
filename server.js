@@ -5,6 +5,7 @@ const app = express()
 
 // Bring in the Controllers
 const ancestorController = require('./controllers/ancestorController');
+const userController = require('./controllers/userController');
 
 // Configure Postgres
 const { Pool } = require('pg')
@@ -84,7 +85,7 @@ app.get('/', (request, response) => {
 app.get('/ancestors', ancestorController.handleGetAvailable);
 app.get('/ancestors/:id', ancestorController.handleGetReserved);
 
-app.post('/createUser');
+app.post('/createUser', userController.handlePostUser);
 
 // Middleware
 function logRequest(request, response, next) {
