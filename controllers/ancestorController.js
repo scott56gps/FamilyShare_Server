@@ -53,7 +53,7 @@ function postAncestor(request, response) {
 }
 
 function reserveAncestor(request, response) {
-    var ancestorId = request.body.id;
+    var ancestorId = request.body.ancestorId;
     var userId = request.body.userId;
 
     // Reserve this ancestor for this user
