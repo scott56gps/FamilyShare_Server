@@ -37,7 +37,7 @@ app.get('/ancestors/:id', ancestorController.handleGetReserved);
 app.post('/ancestor', upload.single('templePdf'), ancestorController.handlePostAncestor);
 app.post('/createUser', userController.handlePostUser);
 
-app.put('/ancestor', ancestorController.handlePutAncestor);
+app.put('/reserve', ancestorController.handlePutAncestor);
 
 // Middleware
 function logRequest(request, response, next) {
