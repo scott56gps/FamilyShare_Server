@@ -68,6 +68,26 @@ function reserveAncestor(request, response) {
     });
 }
 
+function getTempleCardForAncestor(request, response) {
+    var ancestorId = request.params.ancestorId;
+
+    // Get the Temple Card for this ancestorId
+    ancestorModel.getTempleCardForAncestor(ancestorId, (error, templeCard) => {
+        if (error) {
+            console.error(error);
+            response.status(500).json({ success: false, error: error });
+            return;
+        }
+
+        response.writeHead(200, {
+            'Content-Type': 'application/pdf',
+            'Content-Disposition': `attachment; filename=${fsId}.pdf`,
+            'Content-Length': data.length
+        });
+        response.end(templeCard);
+    })
+}
+
 module.exports = {
     handleGetAvailable: getAvailableAncestors,
     handleGetReserved: getReservedAncestors,

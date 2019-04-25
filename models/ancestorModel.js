@@ -104,8 +104,44 @@ function reserveAncestor(ancestorId, userId, callback) {
     })
 }
 
+function getTempleCardForAncestor(ancestorId, callback) {
+    db.connectToDatabase((connectionError, client, done) => {
+        if (connectionError) {
+            callback(connectionError);
+            return;
+        }
+
+        // Get the FS ID for this Ancestor from the database
+        var query = {
+            text: 'SELECT fs_id FROM ancestor WHERE id = $1',
+            values: [ancestorId]
+        };
+
+        db.queryDatabase(query, client, (ancestorError, ancestorResult) => {
+            if (ancestorError) {
+                done();
+                callback(ancestorError);
+                return;
+            }
+
+            var fsId = ancestorResult.rows[0];
+            done();
+
+            aws.loadPdfFromAWS(fsId, (loadPdfError, templeCard) => {
+                if (loadPdfError) {
+                    callback(loadPdfError);
+                    return;
+                }
+
+                callback(null, templeCard);
+            })
+        })
+    })
+}
+
 module.exports = {
     getAncestors: getAncestors,
     createAncestor: createAncestor,
-    reserveAncestor: reserveAncestor
+    reserveAncestor: reserveAncestor,
+    getTempleCardForAncestor: getTempleCardForAncestor
 }

@@ -33,6 +33,7 @@ app.get('/', (request, response) => {
 
 app.get('/ancestors', ancestorController.handleGetAvailable);
 app.get('/ancestors/:id', ancestorController.handleGetReserved);
+app.get('/templeCard/:ancestorId')
 
 app.post('/ancestor', upload.single('templePdf'), ancestorController.handlePostAncestor);
 app.post('/createUser', userController.handlePostUser);
@@ -51,40 +52,6 @@ app.get('/exampleQuery', async (request, response) => {
         const result = await client.query('SELECT user_id FROM "user" WHERE user_id = 1');
         response.send(result.rows[0])
         client.release()
-    } catch (err) {
-        console.error(err);
-        response.send("Error " + err);
-    }
-})
-
-app.post('/reserve', upload.none(), async (request, response) => {
-    try {
-        // const ancestorId = request.params.ancestorId
-        // const userId = request.params.userId
-        console.log(request.body.id)
-        console.log(request.body.userId)
-        var ancestorId = request.body.id
-        var userId = request.body.userId
-
-        const client = await pool.connect()
-
-        // Query the ancestorId that came through
-        const result = await client.query(`SELECT fs_id FROM ancestor WHERE id = ${ancestorId} AND user_id IS NULL`)
-
-        // First, reserve the ancestor for this user
-        if (result.rows.length == 1 && userId != undefined) {
-            console.log('We found the fs_id for the requested ancestor!')
-            var fsId = result.rows[0]['fs_id']
-
-            // Reserve the ancestor by updating the user_id column for this ancestorId
-            const updateResult = await client.query(`UPDATE ancestor SET user_id = ${userId} WHERE id = ${ancestorId}`)
-
-            client.release()
-            response.send({ "fs_id": fsId })
-        } else {
-            client.release()
-            response.send({ "Error": "Either the ancestorId or userId was undefined" })
-        }
     } catch (err) {
         console.error(err);
         response.send("Error " + err);

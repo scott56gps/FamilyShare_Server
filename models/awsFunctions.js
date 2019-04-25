@@ -26,6 +26,10 @@ function savePdfToAWS(templeCardDto, callback) {
 }
 
 function loadPdfFromAWS(fsId, callback) {
+    if (fsId == undefined) {
+        callback('FSID is undefined');
+        return;
+    }
     var params = {
         Bucket: process.env.S3_BUCKET_NAME, 
         Key: `${fsId}.pdf`
@@ -35,7 +39,6 @@ function loadPdfFromAWS(fsId, callback) {
         if (error) {
             callback(error)
         } else {
-            console.log('Got Data!')
             callback(undefined, data.Body)
         }
     })
