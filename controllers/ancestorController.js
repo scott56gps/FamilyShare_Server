@@ -91,6 +91,7 @@ function getTempleCardForAncestor(request, response) {
 module.exports = {
     handleGetAvailable: getAvailableAncestors,
     handleGetReserved: getReservedAncestors,
+    handleGetTempleCard: getTempleCardForAncestor,
     handlePostAncestor: postAncestor,
     handlePutAncestor: reserveAncestor
 }
