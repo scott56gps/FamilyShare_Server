@@ -70,13 +70,42 @@ function createAncestor(ancestorDto, templeCardDto, callback) {
 
                 var ancestor = ancestorResult.rows[0];
 
+                done();
                 callback(null, ancestor);
             })
         })
     })
 }
 
+function reserveAncestor(ancestorId, userId, callback) {
+    db.connectToDatabase((connectionError, client, done) => {
+        if (connectionError) {
+            callback(connectionError);
+            return;
+        }
+
+        var query = {
+            text: 'UPDATE ancestor SET user_id = $1 WHERE id = $2 RETURNING id, given_name, surname, ordinance_needed, user_id, fs_id, gender',
+            values: [ancestorId, userId]
+        };
+
+        db.queryDatabase(query, client, (ancestorError, ancestorResult) => {
+            if (ancestorError) {
+                done();
+                callback(ancestorError);
+                return;
+            }
+
+            var ancestor = ancestorResult.rows[0];
+
+            done();
+            callback(null, ancestor);
+        })
+    })
+}
+
 module.exports = {
     getAncestors: getAncestors,
-    createAncestor: createAncestor
+    createAncestor: createAncestor,
+    reserveAncestor: reserveAncestor
 }

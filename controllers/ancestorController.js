@@ -49,11 +49,28 @@ function postAncestor(request, response) {
         }
 
         response.json(ancestor);
-    })
+    });
+}
+
+function reserveAncestor(request, response) {
+    var ancestorId = request.body.id;
+    var userId = request.body.userId;
+
+    // Reserve this ancestor for this user
+    ancestorModel.reserveAncestor(ancestorId, userId, (error, ancestor) => {
+        if (error) {
+            console.error(error);
+            response.status(500).json({ success: false, error: error });
+            return;
+        }
+
+        response.json(ancestor);
+    });
 }
 
 module.exports = {
     handleGetAvailable: getAvailableAncestors,
     handleGetReserved: getReservedAncestors,
-    handlePostAncestor: postAncestor
+    handlePostAncestor: postAncestor,
+    handlePutAncestor: reserveAncestor
 }
