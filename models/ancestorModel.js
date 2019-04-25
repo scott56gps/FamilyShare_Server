@@ -86,7 +86,7 @@ function reserveAncestor(ancestorId, userId, callback) {
 
         var query = {
             text: 'UPDATE ancestor SET user_id = $1 WHERE id = $2 RETURNING id, given_name, surname, ordinance_needed, user_id, fs_id, gender',
-            values: [ancestorId, userId]
+            values: [userId, ancestorId]
         };
 
         db.queryDatabase(query, client, (ancestorError, ancestorResult) => {
