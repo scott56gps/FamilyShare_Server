@@ -135,7 +135,13 @@ function getTempleCardForAncestor(ancestorId, callback) {
                     return;
                 }
 
-                callback(null, templeCard);
+                // Create Temple Card DTO
+                var templeCardDto = {
+                    templeCard: templeCard,
+                    filename: `${fsId}.pdf`
+                };
+
+                callback(null, templeCardDto);
             })
         })
     })

@@ -74,7 +74,7 @@ function getTempleCardForAncestor(request, response) {
     console.log(ancestorId);
 
     // Get the Temple Card for this ancestorId
-    ancestorModel.getTempleCardForAncestor(ancestorId, (error, templeCard) => {
+    ancestorModel.getTempleCardForAncestor(ancestorId, (error, templeCardDto) => {
         if (error) {
             console.error(error);
             response.status(500).json({ success: false, error: error });
@@ -83,10 +83,10 @@ function getTempleCardForAncestor(request, response) {
 
         response.writeHead(200, {
             'Content-Type': 'application/pdf',
-            'Content-Disposition': `attachment; filename=${fsId}.pdf`,
-            'Content-Length': data.length
+            'Content-Disposition': `attachment; filename=${templeCardDto.filename}`,
+            'Content-Length': templeCardDto.templeCard.length
         });
-        response.end(templeCard);
+        response.end(templeCardDto.templeCard);
     })
 }
 
