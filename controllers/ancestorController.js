@@ -71,6 +71,8 @@ function reserveAncestor(request, response) {
 function getTempleCardForAncestor(request, response) {
     var ancestorId = request.params.ancestorId;
 
+    console.log(ancestorId);
+
     // Get the Temple Card for this ancestorId
     ancestorModel.getTempleCardForAncestor(ancestorId, (error, templeCard) => {
         if (error) {
