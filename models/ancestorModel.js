@@ -124,7 +124,7 @@ function getTempleCardForAncestor(ancestorId, callback) {
                 return;
             }
 
-            var fsId = ancestorResult.rows[0];
+            var fsId = ancestorResult.rows[0]['fs_id'];
             done();
 
             console.log('fsId', fsId);
