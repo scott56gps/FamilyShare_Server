@@ -127,6 +127,8 @@ function getTempleCardForAncestor(ancestorId, callback) {
             var fsId = ancestorResult.rows[0];
             done();
 
+            console.log('fsId', fsId);
+
             aws.loadPdfFromAWS(fsId, (loadPdfError, templeCard) => {
                 if (loadPdfError) {
                     callback(loadPdfError);

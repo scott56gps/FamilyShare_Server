@@ -35,6 +35,8 @@ function loadPdfFromAWS(fsId, callback) {
         Key: `${fsId}.pdf`
     };
 
+    console.log('params.Key', params.Key);
+
     s3.getObject(params, (error, data) => {
         if (error) {
             callback(error)
