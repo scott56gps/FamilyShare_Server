@@ -6,13 +6,6 @@ const app = express()
 const ancestorController = require('./controllers/ancestorController');
 const userController = require('./controllers/userController');
 
-// Configure Postgres
-const { Pool } = require('pg')
-const pool =  new Pool({
-    connectionString: process.env.DATABASE_URL,
-    ssl: true
-})
-
 // Configure body-parser
 const bodyParser = require('body-parser')
 app.use(bodyParser.json())
@@ -46,18 +39,6 @@ function logRequest(request, response, next) {
     console.log('Received ' + request.method + ' request for: ' + request.url);
     next();
 }
-
-app.get('/exampleQuery', async (request, response) => {
-    try {
-        const client = await pool.connect()
-        const result = await client.query('SELECT user_id FROM "user" WHERE user_id = 1');
-        response.send(result.rows[0])
-        client.release()
-    } catch (err) {
-        console.error(err);
-        response.send("Error " + err);
-    }
-})
 
 app.listen(port, () => {
     console.log(`Server now listening on port ${port}`)
