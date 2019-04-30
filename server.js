@@ -37,6 +37,7 @@ app.get('/templeCard/:ancestorId', ancestorController.handleGetTempleCard);
 
 app.post('/ancestor', upload.single('templePdf'), ancestorController.handlePostAncestor);
 app.post('/createUser', userController.handlePostUser);
+app.post('/login', userController.handleLoginUser);
 
 app.put('/reserve', ancestorController.handlePutAncestor);
 
@@ -57,46 +58,6 @@ app.get('/exampleQuery', async (request, response) => {
         response.send("Error " + err);
     }
 })
-
-// app.get('/templeCard/:userId/:ancestorId', async (request, response) => {
-//     console.log('userId:', request.params.userId)
-//     console.log('ancestorId:', request.params.ancestorId)
-//     var userId = request.params.userId
-//     var ancestorId = request.params.ancestorId
-
-//     // Check to see if the user is associated with this ancestor
-//     try {
-//         const client = await pool.connect()
-
-//         const result = await client.query(`SELECT * FROM ancestor WHERE user_id = ${userId} AND id = ${ancestorId};`)
-    
-//         var fsId = result.rows[0]['fs_id']
-//         console.log('fs_id', fsId)
-//         if (result.rows.length == 1) {
-//             // Proceed with the download
-//             loadPdfFromAWS(fsId, (err, data) => {
-//                 if (err) {
-//                     console.log("ERROR!")
-//                     console.log(err)
-//                     client.release()
-//                     response.send(err)
-//                 }
-//                 response.writeHead(200, {
-//                     'Content-Type': 'application/pdf',
-//                     'Content-Disposition': `attachment; filename=${fsId}.pdf`,
-//                     'Content-Length': data.length
-//                 });
-//                 client.release()
-//                 response.end(data)
-//             })
-//         } else {
-//             response.send('ERROR: User is not associated with this ancestor')
-//         }
-//     } catch (err) {
-//         console.error(err)
-//         response.send("Error " + err)
-//     }
-// })
 
 app.get('/login/:username', async (request, response) => {
     try {

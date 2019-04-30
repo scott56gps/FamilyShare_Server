@@ -1,7 +1,7 @@
 const userModel = require('../models/userModel');
 
 function postUser(request, response) {
-    var username = request.body.username
+    var username = request.body.username;
 
     // Create a user using the model
     userModel.createUser(username, (error, user) => {
@@ -15,6 +15,22 @@ function postUser(request, response) {
     });
 }
 
+function loginUser(request, response) {
+    var username = request.body.username;
+
+    // Log this user in
+    userModel.loginUser(username, (error, userId) => {
+        if (error) {
+            console.error(error);
+            response.status(500).json({ success: false, error: error });
+            return;
+        }
+
+        response.json({ userId: userId });
+    });
+}
+
 module.exports = {
-    handlePostUser: postUser
+    handlePostUser: postUser,
+    handleLoginUser: loginUser
 }
