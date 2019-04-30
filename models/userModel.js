@@ -36,7 +36,7 @@ function loginUser(username, callback) {
         }
 
         var query = {
-            text: 'SELECT id FROM "user" WHERE username = $1',
+            text: 'SELECT user_id FROM "user" WHERE username = $1',
             values: [username]
         };
 
