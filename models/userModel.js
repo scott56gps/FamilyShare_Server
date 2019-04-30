@@ -35,8 +35,6 @@ function loginUser(username, callback) {
             return;
         }
 
-        console.log(username)
-
         var query = {
             text: 'SELECT user_id FROM "user" WHERE username = $1',
             values: [username]
@@ -48,8 +46,6 @@ function loginUser(username, callback) {
                 callback(userError);
                 return;
             }
-
-            console.log(userResult)
 
             var userId = userResult.rows[0]['user_id'];
 
