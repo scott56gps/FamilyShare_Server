@@ -47,7 +47,7 @@ function loginUser(username, callback) {
                 return;
             }
 
-            var userId = userResult.rows[0]['id'];
+            var userId = userResult['user_id'];
 
             callback(null, userId);
         })
