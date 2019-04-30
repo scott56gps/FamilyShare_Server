@@ -59,35 +59,6 @@ app.get('/exampleQuery', async (request, response) => {
     }
 })
 
-app.get('/login/:username', async (request, response) => {
-    try {
-        var username = request.params.username
-        console.log('username:', username)
-
-        const client = await pool.connect()
-
-        // Query the username that came through
-        const result = await client.query(`SELECT * FROM "user" WHERE username = '${username}'`)
-        
-        if (result.rows.length > 0 && result.rows[0]['username'] == username) {
-            console.log('User found!')
-
-            //var userId = result.rows[0]['user_id']
-
-            //var stringifiedUserId = JSON.stringify(userId)
-
-            console.log(result.rows)
-            response.send(result.rows)
-        } else {
-            response.send('User not found')
-        }
-        client.release()
-    } catch (err) {
-        console.error(err);
-        response.send("Error " + err);
-    }
-})
-
 app.listen(port, () => {
     console.log(`Server now listening on port ${port}`)
 })
