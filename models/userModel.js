@@ -35,7 +35,7 @@ function loginUser(username, callback) {
             return;
         }
 
-        console.log(usernme)
+        console.log(username)
 
         var query = {
             text: 'SELECT user_id FROM "user" WHERE username = $1',
