@@ -25,7 +25,7 @@ app.get('/', (request, response) => {
 })
 
 app.get('/ancestors', ancestorController.handleGetAvailable);
-app.get('/ancestors/:id', ancestorController.handleGetReserved);
+app.get('/ancestors/:userId', ancestorController.handleGetReserved);
 app.get('/templeCard/:ancestorId', ancestorController.handleGetTempleCard);
 
 app.post('/ancestor', upload.single('templePdf'), ancestorController.handlePostAncestor);

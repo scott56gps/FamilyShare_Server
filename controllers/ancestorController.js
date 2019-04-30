@@ -13,7 +13,7 @@ function getAvailableAncestors(request, response) {
 }
 
 function getReservedAncestors(request, response) {
-    var userId = request.params.id
+    var userId = request.params.userId
     ancestorModel.getAncestors(userId, (error, ancestors) => {
         if (error) {
             console.error(error);
