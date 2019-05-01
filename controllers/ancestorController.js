@@ -8,8 +8,6 @@ function getAvailableAncestors(request, response) {
             return;
         }
 
-        console.log(ancestors);
-
         response.json(ancestors);
     })
 }

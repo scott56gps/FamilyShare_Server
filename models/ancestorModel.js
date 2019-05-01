@@ -19,8 +19,6 @@ function getAncestors(userId, callback) {
             };
         }
 
-        console.log(query);
-
         db.queryDatabase(query, client, (ancestorErr, ancestorResult) => {
             if (ancestorErr) {
                 done();
