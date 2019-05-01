@@ -15,9 +15,11 @@ function getAncestors(userId, callback) {
             };
         } else {
             query = {
-                text: 'SELECT id, given_name, surname, ordinance_needed, gender FROM ancestor WHERE user_id = NULL'
+                text: 'SELECT id, given_name, surname, ordinance_needed, gender FROM ancestor WHERE user_id IS NULL'
             };
         }
+
+        console.log(query);
 
         db.queryDatabase(query, client, (ancestorErr, ancestorResult) => {
             if (ancestorErr) {
