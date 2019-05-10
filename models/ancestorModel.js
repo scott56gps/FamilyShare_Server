@@ -154,7 +154,7 @@ function deleteAncestor(ancestorId) {
 
         // Get the FS ID for this ancestor from the database
         var query = {
-            text: 'SELECT fs_id FROM ancestor WHERE id = $1',
+            text: 'SELECT id, fs_id FROM ancestor WHERE id = $1',
             values: [ancestorId]
         };
 
@@ -165,10 +165,32 @@ function deleteAncestor(ancestorId) {
                 return;
             }
 
+            var id = ancestorResult.rows[0]['id'];
             var fsId = ancestorResult.rows[0]['fs_id'];
             // done();
 
-            
+            aws.deletePdfFromAWS(fsId, (awsError) => {
+                if (awsError) {
+                    callback(awsError);
+                    return;
+                }
+
+                // Now, delete the ancestor from the database
+                var query = {
+                    text: 'DELETE FROM ancestor WHERE id = $1',
+                    values: [id]
+                };
+
+                db.queryDatabase(query, client, (deleteError) => {
+                    if (deleteError) {
+                        callback(deleteError);
+                        return;
+                    }
+
+                    done();
+                    callback(undefined);
+                })
+            })
         })
     })
 }
