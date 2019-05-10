@@ -34,6 +34,8 @@ app.post('/login', userController.handleLoginUser);
 
 app.put('/reserve', ancestorController.handlePutAncestor);
 
+app.delete('/ancestor');
+
 // Middleware
 function logRequest(request, response, next) {
     console.log('Received ' + request.method + ' request for: ' + request.url);

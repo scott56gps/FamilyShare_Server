@@ -145,6 +145,34 @@ function getTempleCardForAncestor(ancestorId, callback) {
     })
 }
 
+function deleteAncestor(ancestorId) {
+    db.connectToDatabase((connectionError, client, done) => {
+        if (connectionError) {
+            callback(connectionError);
+            return;
+        }
+
+        // Get the FS ID for this ancestor from the database
+        var query = {
+            text: 'SELECT fs_id FROM ancestor WHERE id = $1',
+            values: [ancestorId]
+        };
+
+        db.queryDatabase(query, client, (ancestorError, ancestorResult) => {
+            if (ancestorError) {
+                callback(ancestorError);
+                done();
+                return;
+            }
+
+            var fsId = ancestorResult.rows[0]['fs_id'];
+            // done();
+
+            
+        })
+    })
+}
+
 module.exports = {
     getAncestors: getAncestors,
     createAncestor: createAncestor,

@@ -88,6 +88,12 @@ function getTempleCardForAncestor(request, response) {
     })
 }
 
+function handleDeleteAncestor(request, response) {
+    var ancestorId = request.params.ancestorId;
+
+    
+}
+
 module.exports = {
     handleGetAvailable: getAvailableAncestors,
     handleGetReserved: getReservedAncestors,

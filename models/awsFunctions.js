@@ -44,7 +44,29 @@ function loadPdfFromAWS(fsId, callback) {
     })
 }
 
+function deletePdfFromAWS(fsId, callback) {
+    if (fsId == undefined) {
+        callback('FSID is undefined');
+        return;
+    }
+
+    var params = {
+        Bucket: process.env.S3_BUCKET_NAME, 
+        Key: `${fsId}.pdf`
+    };
+
+    s3.deleteObject(params, (error) => {
+        if (error) {
+            callback(error);
+            return;
+        }
+
+        callback(undefined);
+    });
+}
+
 module.exports = {
     savePdfToAWS: savePdfToAWS,
-    loadPdfFromAWS: loadPdfFromAWS
+    loadPdfFromAWS: loadPdfFromAWS,
+    deletePdfFromAWS: deletePdfFromAWS
 }
