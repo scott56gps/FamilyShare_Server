@@ -89,7 +89,7 @@ function getTempleCardForAncestor(request, response) {
 }
 
 function deleteAncestor(request, response) {
-    var ancestorId = request.params.ancestorId;
+    var ancestorId = request.body.ancestorId;
 
     ancestorModel.deleteAncestor(ancestorId, (error) => {
         if (error) {
