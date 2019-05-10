@@ -145,7 +145,7 @@ function getTempleCardForAncestor(ancestorId, callback) {
     })
 }
 
-function deleteAncestor(ancestorId) {
+function deleteAncestor(ancestorId, callback) {
     db.connectToDatabase((connectionError, client, done) => {
         if (connectionError) {
             callback(connectionError);
@@ -199,5 +199,6 @@ module.exports = {
     getAncestors: getAncestors,
     createAncestor: createAncestor,
     reserveAncestor: reserveAncestor,
-    getTempleCardForAncestor: getTempleCardForAncestor
+    getTempleCardForAncestor: getTempleCardForAncestor,
+    deleteAncestor: deleteAncestor
 }

@@ -88,10 +88,18 @@ function getTempleCardForAncestor(request, response) {
     })
 }
 
-function handleDeleteAncestor(request, response) {
+function deleteAncestor(request, response) {
     var ancestorId = request.params.ancestorId;
 
-    
+    ancestorModel.deleteAncestor(ancestorId, (error) => {
+        if (error) {
+            console.error(error);
+            response.status(500).json({ success: false, error: error });
+            return;
+        }
+
+        response.end();
+    })
 }
 
 module.exports = {
@@ -99,5 +107,6 @@ module.exports = {
     handleGetReserved: getReservedAncestors,
     handleGetTempleCard: getTempleCardForAncestor,
     handlePostAncestor: postAncestor,
-    handlePutAncestor: reserveAncestor
+    handlePutAncestor: reserveAncestor,
+    handleDeleteAncestor: deleteAncestor
 }

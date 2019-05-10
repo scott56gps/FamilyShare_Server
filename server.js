@@ -34,7 +34,7 @@ app.post('/login', userController.handleLoginUser);
 
 app.put('/reserve', ancestorController.handlePutAncestor);
 
-app.delete('/ancestor');
+app.delete('/ancestor', ancestorController.handleDeleteAncestor);
 
 // Middleware
 function logRequest(request, response, next) {
