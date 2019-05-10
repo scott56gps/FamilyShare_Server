@@ -154,7 +154,7 @@ function deleteAncestor(ancestorId, callback) {
 
         // Get the FS ID for this ancestor from the database
         var query = {
-            text: 'SELECT id, fs_id FROM ancestor WHERE id = $1',
+            text: 'SELECT fs_id FROM ancestor WHERE id = $1',
             values: [ancestorId]
         };
 
@@ -165,7 +165,6 @@ function deleteAncestor(ancestorId, callback) {
                 return;
             }
 
-            var id = ancestorResult.rows[0]['id'];
             var fsId = ancestorResult.rows[0]['fs_id'];
             // done();
 
@@ -178,7 +177,7 @@ function deleteAncestor(ancestorId, callback) {
                 // Now, delete the ancestor from the database
                 var query = {
                     text: 'DELETE FROM ancestor WHERE id = $1',
-                    values: [id]
+                    values: [ancestorId]
                 };
 
                 db.queryDatabase(query, client, (deleteError) => {
