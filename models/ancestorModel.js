@@ -10,12 +10,12 @@ function getAncestors(userId, callback) {
         var query;
         if (userId) {
             query = {
-                text: 'SELECT id, given_name, surname, ordinance_needed, gender FROM ancestor WHERE user_id = $1',
+                text: 'SELECT id, given_name, surname, ordinance_needed, gender, fs_id FROM ancestor WHERE user_id = $1',
                 values: [userId]
             };
         } else {
             query = {
-                text: 'SELECT id, given_name, surname, ordinance_needed, gender FROM ancestor WHERE user_id IS NULL'
+                text: 'SELECT id, given_name, surname, ordinance_needed, gender, fs_id FROM ancestor WHERE user_id IS NULL'
             };
         }
 
