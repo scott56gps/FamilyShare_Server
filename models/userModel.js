@@ -8,7 +8,7 @@ function createUser(username, callback) {
         }
 
         var query = {
-            text: 'INSERT INTO "user"(username) VALUES ($1) RETURNING username',
+            text: 'INSERT INTO "user"(username) VALUES ($1) RETURNING user_id',
             values: [username]
         };
 
