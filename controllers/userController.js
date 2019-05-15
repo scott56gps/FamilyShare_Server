@@ -4,14 +4,14 @@ function postUser(request, response) {
     var username = request.body.username;
 
     // Create a user using the model
-    userModel.createUser(username, (error, user) => {
+    userModel.createUser(username, (error, userId) => {
         if (error) {
             console.error(error);
             response.status(500).json({ success: false, error: error });
             return;
         }
 
-        response.json(user);
+        response.json({ userId: userId });
     });
 }
 

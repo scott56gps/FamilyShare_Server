@@ -19,11 +19,11 @@ function createUser(username, callback) {
                 return;
             }
 
-            var user = userResult.rows[0];
+            var userId = userResult.rows[0];
 
             // Return the newly created user
             done();
-            callback(null, user);
+            callback(null, userId);
         })
     })
 }
