@@ -7,8 +7,13 @@ function postUser(request, response) {
     userModel.createUser(username, (error, userId) => {
         if (error) {
             console.error(error);
-            response.status(500).json({ success: false, error: error });
-            return;
+            if (error.constraint == 'user_username_key') {
+                response.status(400).json({ success: false, error: error });
+                return;
+            } else {
+                response.status(500).json({ success: false, error: error });
+                return;
+            }
         }
 
         response.json({ userId: userId });
