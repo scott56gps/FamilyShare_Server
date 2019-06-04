@@ -2,6 +2,7 @@ const express = require('express')
 const multer = require('multer')
 const socket = require('socket.io')
 const app = express()
+const http = require('http').createServer(app);
 
 // Bring in the Controllers
 const ancestorController = require('./controllers/ancestorController');
@@ -22,7 +23,7 @@ const upload = multer({
 const port = process.env.PORT || 5000;
 
 // Configure Socket.IO
-var io = socket(server);
+var io = socket(http);
 
 app.get('/', (request, response) => {
     response.send("Welcome to the App!  This is an example database querying app with the potential to become the production server")
