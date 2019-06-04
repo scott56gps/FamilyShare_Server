@@ -51,6 +51,10 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => {
         console.log('Socket ' + socket + ' was disconnected');
     });
+
+    setTimeout(function() {
+        socket.send('Sent a message after connection!');
+     }, 4000);
 })
 
 // Middleware
