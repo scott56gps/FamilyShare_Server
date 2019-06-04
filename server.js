@@ -65,7 +65,14 @@ io.on('connection', (socket) => {
 
             console.log(ancestors);
 
-            socket.emit('availableAncestors', ancestors);
+            socket.emit('availableAncestors', [ancestors[0],
+                {id: 111,
+                given_name: 'Juan',
+                surname: 'Pablo',
+                ordinance_needed: 'Baptism',
+                gender: 'Male',
+                fs_id: 'XXXX-XXX'
+            }]);
         })
      }, 4000);
 })
