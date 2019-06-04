@@ -1,5 +1,6 @@
 const express = require('express')
 const multer = require('multer')
+const socket = require('socket.io')
 const app = express()
 
 // Bring in the Controllers
@@ -20,6 +21,9 @@ const upload = multer({
 
 const port = process.env.PORT || 5000;
 
+// Configure Socket.IO
+var io = socket(server);
+
 app.get('/', (request, response) => {
     response.send("Welcome to the App!  This is an example database querying app with the potential to become the production server")
 })
@@ -36,12 +40,20 @@ app.put('/reserve', ancestorController.handlePutAncestor);
 
 app.delete('/ancestor', ancestorController.handleDeleteAncestor);
 
+io.on('connection', (socket) => {
+    console.log('Made a connection');
+
+    socket.on('disconnect', () => {
+        console.log('Socket ' + socket + ' was disconnected');
+    });
+})
+
 // Middleware
 function logRequest(request, response, next) {
     console.log('Received ' + request.method + ' request for: ' + request.url);
     next();
 }
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
     console.log(`Server now listening on port ${port}`)
-})
+});
