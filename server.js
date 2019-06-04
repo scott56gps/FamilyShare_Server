@@ -63,6 +63,8 @@ io.on('connection', (socket) => {
                 return;
             }
 
+            console.log(ancestors);
+
             socket.emit('availableAncestors', ancestors);
         })
      }, 4000);
