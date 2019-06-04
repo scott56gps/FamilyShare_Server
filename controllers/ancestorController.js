@@ -12,6 +12,18 @@ function getAvailableAncestors(request, response) {
     })
 }
 
+function getAvailableAncestorsNoRequest(callback) {
+    ancestorModel.getAncestors(null, (error, ancestors) => {
+        if (error) {
+            console.error(error);
+            response.status(500).json({ success: false, error: err });
+            return;
+        }
+
+        callback(null, ancestors);
+    })
+}
+
 function getReservedAncestors(request, response) {
     var userId = request.params.userId
     ancestorModel.getAncestors(userId, (error, ancestors) => {
@@ -108,5 +120,6 @@ module.exports = {
     handleGetTempleCard: getTempleCardForAncestor,
     handlePostAncestor: postAncestor,
     handlePutAncestor: reserveAncestor,
-    handleDeleteAncestor: deleteAncestor
+    handleDeleteAncestor: deleteAncestor,
+    socketIOGetAvailable: getAvailableAncestorsNoRequest
 }

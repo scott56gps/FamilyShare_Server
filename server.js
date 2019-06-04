@@ -53,7 +53,18 @@ io.on('connection', (socket) => {
     });
 
     setTimeout(function() {
-        socket.send('Sent a message after connection!');
+        // Simple Message send
+        // socket.send('Sent a message after connection!');
+
+        // Send a list of ancestors
+        ancestorController.socketIOGetAvailable((error, ancestors) => {
+            if (error) {
+                console.error(error);
+                return;
+            }
+
+            socket.emit('availableAncestors', ancestors);
+        })
      }, 4000);
 })
 
