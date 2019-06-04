@@ -2,7 +2,6 @@ const express = require('express')
 const multer = require('multer')
 const socket = require('socket.io')
 const app = express()
-const http = require('http').createServer(app);
 
 // Bring in the Controllers
 const ancestorController = require('./controllers/ancestorController');
@@ -22,8 +21,13 @@ const upload = multer({
 
 const port = process.env.PORT || 5000;
 
+const server = app.listen(port, () => {
+    console.log(`Server now listening on port ${port}`)
+});
+
 // Configure Socket.IO
-var io = socket(http);
+// const http = require('http').createServer(app);
+var io = socket(server);
 
 app.get('/', (request, response) => {
     response.send("Welcome to the App!  This is an example database querying app with the potential to become the production server")
@@ -54,7 +58,3 @@ function logRequest(request, response, next) {
     console.log('Received ' + request.method + ' request for: ' + request.url);
     next();
 }
-
-const server = app.listen(port, () => {
-    console.log(`Server now listening on port ${port}`)
-});
