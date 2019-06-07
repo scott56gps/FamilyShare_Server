@@ -37,7 +37,7 @@ function getReservedAncestors(request, response) {
     })
 }
 
-function postAncestor(request, response, next) {
+function postAncestor(request, response) {
     var ancestorDto = {
         givenNames: request.body.givenNames,
         surname: request.body.surname,
@@ -60,8 +60,7 @@ function postAncestor(request, response, next) {
             return;
         }
 
-        // response.json(ancestor);
-        next(ancestor);
+        response.json(ancestor);
     });
 }
 
@@ -113,6 +112,28 @@ function deleteAncestor(request, response) {
 
         response.end();
     })
+}
+
+function socketPostTest(request, response, next) {
+    var ancestorDto = {
+        givenNames: request.body.givenNames,
+        surname: request.body.surname,
+        ordinanceNeeded: request.body.ordinanceNeeded,
+        familySearchId: request.body.familySearchId,
+        gender: request.body.gender
+    }
+
+    // Create a Temple Card DTO
+    var templeCardDto = {
+        key:`${request.body.familySearchId}.pdf`,
+        value: request.file.buffer
+    }
+
+    console.log('ancestorDto', ancestorDto);
+    console.log('templeCardDto', templeCardDto);
+
+    response.locals.ancestor = ancestorDto;
+    next();
 }
 
 module.exports = {

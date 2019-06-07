@@ -48,21 +48,21 @@ app.delete('/ancestor', ancestorController.handleDeleteAncestor);
 io.on('connection', (socket) => {
     console.log('Made a connection');
 
-    app.post('/ancestor', upload.single('templePdf'), ancestorController.handlePostAncestor);
+    app.post('/ancestor', upload.single('templePdf'), ancestorController.socketPostTest);
     app.use(emitSharedAncestor);
 
     socket.on('disconnect', () => {
         console.log('Socket ' + socket + ' was disconnected');
     });
 
-    socket.on('shareAncestor', (data) => {
+    /* socket.on('shareAncestor', (data) => {
         
-    });
+    }); */
 
-    function emitSharedAncestor(request, response, ancestor) {
+    function emitSharedAncestor(request, response) {
         console.log(ancestor);
 
-        socket.emit('newAvailableAncestor', ancestor);
+        socket.emit('newAvailableAncestor', response.locals.ancestor);
         response.send("success");
     }
 
