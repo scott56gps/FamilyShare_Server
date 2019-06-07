@@ -116,10 +116,10 @@ function deleteAncestor(request, response) {
 
 function socketPostTest(request, response, next) {
     var ancestorDto = {
-        givenNames: request.body.givenNames,
+        "given_name": request.body.givenNames,
         surname: request.body.surname,
-        ordinanceNeeded: request.body.ordinanceNeeded,
-        familySearchId: request.body.familySearchId,
+        "ordinance_needed": request.body.ordinanceNeeded,
+        "fs_id": request.body.familySearchId,
         gender: request.body.gender
     }
 
