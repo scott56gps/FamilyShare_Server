@@ -133,7 +133,6 @@ function socketPostTest(request, response, next) {
     console.log('templeCardDto', templeCardDto);
 
     ancestorDto.id = 0;
-    response.locals.socket = socket;
     response.locals.ancestor = ancestorDto;
     next();
 }
