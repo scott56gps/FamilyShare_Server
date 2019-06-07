@@ -60,8 +60,6 @@ io.on('connection', (socket) => {
     }); */
 
     function emitSharedAncestor(request, response) {
-        console.log(ancestor);
-
         socket.emit('newAvailableAncestor', response.locals.ancestor);
         response.send("success");
     }
