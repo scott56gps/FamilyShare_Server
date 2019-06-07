@@ -55,7 +55,7 @@ io.on('connection', (socket) => {
     socket.on('shareAncestor', (data) => {
         console.log(data);
 
-        socket.emit('availableAncestorsUpdated', ancestors);
+        socket.emit('testCompleted', 'success');
     });
 
     // Send a list of ancestors
