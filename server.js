@@ -58,16 +58,6 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => {
         console.log('Socket was disconnected');
     });
-
-    // Send a list of ancestors
-    /* ancestorController.socketIOGetAvailable((error, ancestors) => {
-        if (error) {
-            console.error(error);
-            return;
-        }
-
-        socket.emit('availableAncestorsUpdated', ancestors);
-    }) */
 })
 
 // Middleware
