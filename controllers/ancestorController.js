@@ -143,5 +143,6 @@ module.exports = {
     handlePostAncestor: postAncestor,
     handlePutAncestor: reserveAncestor,
     handleDeleteAncestor: deleteAncestor,
-    socketIOGetAvailable: getAvailableAncestorsNoRequest
+    socketIOGetAvailable: getAvailableAncestorsNoRequest,
+    socketPostTest: socketPostTest
 }
