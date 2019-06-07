@@ -37,7 +37,7 @@ app.get('/ancestors', ancestorController.handleGetAvailable);
 app.get('/ancestors/:userId', ancestorController.handleGetReserved);
 app.get('/templeCard/:ancestorId', ancestorController.handleGetTempleCard);
 
-app.post('/ancestor', upload.single('templePdf'), ancestorController.handlePostAncestor);
+// app.post('/ancestor', upload.single('templePdf'), ancestorController.handlePostAncestor);
 app.post('/createUser', userController.handlePostUser);
 app.post('/login', userController.handleLoginUser);
 
@@ -48,15 +48,23 @@ app.delete('/ancestor', ancestorController.handleDeleteAncestor);
 io.on('connection', (socket) => {
     console.log('Made a connection');
 
+    app.post('/ancestor', upload.single('templePdf'), ancestorController.handlePostAncestor);
+    app.use(emitSharedAncestor);
+
     socket.on('disconnect', () => {
         console.log('Socket ' + socket + ' was disconnected');
     });
 
     socket.on('shareAncestor', (data) => {
-        console.log(data);
-
-        socket.emit('testCompleted', 'success');
+        
     });
+
+    function emitSharedAncestor(request, response, ancestor) {
+        console.log(ancestor);
+
+        socket.emit('newAvailableAncestor', ancestor);
+        response.send("success");
+    }
 
     // Send a list of ancestors
     /* ancestorController.socketIOGetAvailable((error, ancestors) => {

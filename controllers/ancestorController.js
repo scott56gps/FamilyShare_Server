@@ -37,7 +37,7 @@ function getReservedAncestors(request, response) {
     })
 }
 
-function postAncestor(request, response) {
+function postAncestor(request, response, next) {
     var ancestorDto = {
         givenNames: request.body.givenNames,
         surname: request.body.surname,
@@ -60,7 +60,8 @@ function postAncestor(request, response) {
             return;
         }
 
-        response.json(ancestor);
+        // response.json(ancestor);
+        next(ancestor);
     });
 }
 
