@@ -39,7 +39,6 @@ app.get('/templeCard/:ancestorId', ancestorController.handleGetTempleCard);
 
 // app.post('/ancestor', upload.single('templePdf'), ancestorController.handlePostAncestor);
 app.post('/ancestor', upload.single('templePdf'), ancestorController.socketPostTest);
-app.use(emitSharedAncestor);
 app.post('/createUser', userController.handlePostUser);
 app.post('/login', userController.handleLoginUser);
 
@@ -58,6 +57,8 @@ io.on('connection', (socket) => {
         socket.emit('newAvailableAncestor', response.locals.ancestor);
         response.send({ "success": true });
     }
+
+    app.use(emitSharedAncestor);
 
     // Send a list of ancestors
     /* ancestorController.socketIOGetAvailable((error, ancestors) => {
