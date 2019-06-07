@@ -52,20 +52,21 @@ io.on('connection', (socket) => {
         console.log('Socket ' + socket + ' was disconnected');
     });
 
-    setTimeout(function() {
-        // Simple Message send
-        // socket.send('Sent a message after connection!');
+    socket.on('shareAncestor', (data) => {
+        console.log(data);
 
-        // Send a list of ancestors
-        ancestorController.socketIOGetAvailable((error, ancestors) => {
-            if (error) {
-                console.error(error);
-                return;
-            }
+        socket.emit('availableAncestorsUpdated', ancestors);
+    });
 
-            socket.emit('availableAncestorsUpdated', ancestors);
-        })
-     }, 4000);
+    // Send a list of ancestors
+    /* ancestorController.socketIOGetAvailable((error, ancestors) => {
+        if (error) {
+            console.error(error);
+            return;
+        }
+
+        socket.emit('availableAncestorsUpdated', ancestors);
+    }) */
 })
 
 // Middleware
