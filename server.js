@@ -52,16 +52,12 @@ io.on('connection', (socket) => {
     app.use(emitSharedAncestor);
 
     socket.on('disconnect', () => {
-        console.log('Socket ' + socket + ' was disconnected');
+        console.log('Socket was disconnected');
     });
-
-    /* socket.on('shareAncestor', (data) => {
-        
-    }); */
 
     function emitSharedAncestor(request, response) {
         socket.emit('newAvailableAncestor', response.locals.ancestor);
-        response.send("success");
+        response.send({ "success": true });
     }
 
     // Send a list of ancestors
