@@ -25,31 +25,13 @@ function getReservedAncestors(request, response) {
     })
 }
 
-function postAncestor(request, response, next) {
-    var ancestorDto = {
-        givenNames: request.body.givenNames,
-        surname: request.body.surname,
-        ordinanceNeeded: request.body.ordinanceNeeded,
-        familySearchId: request.body.familySearchId,
-        gender: request.body.gender
-    }
-
+function postAncestor(request, response) {
     // Create a Temple Card DTO
     var templeCardDto = {
         key:`${request.body.familySearchId}.pdf`,
         value: request.file.buffer
     }
 
-    // Put this Ancestor in the database
-    ancestorModel.createAncestor(ancestorDto, templeCardDto, (error, ancestor) => {
-        if (error) {
-            console.error(error);
-            response.status(500).json({ success: false, error: error });
-            return;
-        }
-
-        response.json(ancestor);
-    });
 }
 
 function reserveAncestor(request, response) {
@@ -107,7 +89,26 @@ function deleteAncestor(request, response) {
 function handleShareAncestor(ancestor, callback) {
     console.log(ancestor);
 
-    callback(null, ancestor);
+    var ancestorDto = {
+        givenNames: ancestor.givenNames,
+        surname: ancestor.surname,
+        ordinanceNeeded: ancestor.ordinanceNeeded,
+        familySearchId: ancestor.familySearchId,
+        gender: ancestor.gender
+    }
+
+    // Put this Ancestor in the database
+    ancestorModel.createAncestor(ancestorDto, templeCardDto, (error, ancestor) => {
+        if (error) {
+            // console.error(error);
+            // response.status(500).json({ success: false, error: error });
+            callback({ success: false, error: error }, null);
+            return;
+        }
+
+        callback(null, ancestor);
+        return;
+    });
 }
 
 function socketPostTest(request, response, next) {

@@ -7,9 +7,13 @@ function registerDefaultConnection(defaultNamespace, socket) {
         ancestorController.handleShareAncestor(data, (error, ancestor) => {
             if (error) {
                 // Handle Error
+                console.error(error);
+                socket.emit('error', error);
+                return;
             }
 
             defaultNamespace.emit('newAvailableAncestor', ancestor);
+            return;
         });
     })
 
