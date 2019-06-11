@@ -104,8 +104,10 @@ function deleteAncestor(request, response) {
 
 /* Websocket Handlers */
 
-function handleShareAncestor(ancestor) {
+function handleShareAncestor(ancestor, callback) {
     console.log(ancestor);
+
+    callback(null, ancestor);
 }
 
 function socketPostTest(request, response, next) {
@@ -138,5 +140,6 @@ module.exports = {
     handlePostAncestor: postAncestor,
     handlePutAncestor: reserveAncestor,
     handleDeleteAncestor: deleteAncestor,
+    handleShareAncestor: handleShareAncestor,
     socketPostTest: socketPostTest
 }
