@@ -32,6 +32,15 @@ function postAncestor(request, response) {
         value: request.file.buffer
     }
 
+    ancestorModel.savePdfToAWS(templeCardDto, (error) => {
+        if (error) {
+            console.error(error);
+            response.status(500).json({ success: false, error: err });
+            return;
+        }
+
+        response.json({ success: true });
+    })
 }
 
 function reserveAncestor(request, response) {

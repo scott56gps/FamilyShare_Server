@@ -67,14 +67,17 @@ function createAncestor(ancestorDto, callback) {
             callback(null, ancestor);
         })
     })
-    // // First, put the templeCard into AWS
-    // aws.savePdfToAWS(templeCardDto, (awsError) => {
-    //     if (awsError) {
-    //         callback(awsError);
-    //         return;
-    //     }
+}
 
-    // })
+function savePdfToAWS(templeCardDto, callback) {
+    aws.savePdfToAWS(templeCardDto, (awsError) => {
+        if (awsError) {
+            callback(awsError);
+            return;
+        } else {
+            callback(null);
+        }
+    })
 }
 
 function reserveAncestor(ancestorId, userId, callback) {
@@ -197,6 +200,7 @@ function deleteAncestor(ancestorId, callback) {
 module.exports = {
     getAncestors: getAncestors,
     createAncestor: createAncestor,
+    savePdfToAWS: savePdfToAWS,
     reserveAncestor: reserveAncestor,
     getTempleCardForAncestor: getTempleCardForAncestor,
     deleteAncestor: deleteAncestor
