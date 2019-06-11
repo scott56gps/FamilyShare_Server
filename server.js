@@ -6,6 +6,7 @@ const app = express()
 // Bring in the Controllers
 const ancestorController = require('./controllers/ancestorController');
 const userController = require('./controllers/userController');
+const websocketController = require('./controllers/websocketController');
 
 // Configure body-parser
 const bodyParser = require('body-parser')
@@ -14,21 +15,19 @@ app.use(logRequest);
 
 // Configure Multer
 var storage = multer.memoryStorage()
-
 const upload = multer({
     storage: storage
 })
 
 const port = process.env.PORT || 5000;
-
 const server = app.listen(port, () => {
     console.log(`Server now listening on port ${port}`)
 });
 
 // Configure Socket.IO
-// const http = require('http').createServer(app);
 var io = socket(server);
 
+/* API Handles */
 app.get('/', (request, response) => {
     response.send("Welcome to the App!  This is an example database querying app with the potential to become the production server")
 })
@@ -37,12 +36,12 @@ app.get('/ancestors', ancestorController.handleGetAvailable);
 app.get('/ancestors/:userId', ancestorController.handleGetReserved);
 app.get('/templeCard/:ancestorId', ancestorController.handleGetTempleCard);
 
-// app.post('/ancestor', upload.single('templePdf'), ancestorController.handlePostAncestor);
-app.post('/ancestor', upload.single('templePdf'), (request, response, next) => {
-    response.locals.io = io;
+app.post('/ancestor', upload.single('templePdf'), ancestorController.handlePostAncestor);
+// app.post('/ancestor', upload.single('templePdf'), (request, response, next) => {
+//     response.locals.io = io;
 
-    ancestorController.socketPostTest(request, response, next);
-});
+//     .socketPostTest(request, response, next);
+// });
 app.post('/createUser', userController.handlePostUser);
 app.post('/login', userController.handleLoginUser);
 
@@ -50,23 +49,13 @@ app.put('/reserve', ancestorController.handlePutAncestor);
 
 app.delete('/ancestor', ancestorController.handleDeleteAncestor);
 
-app.use(emitSharedAncestor);
-
-io.on('connection', (socket) => {
-    console.log('Made a connection');
-
-    socket.on('disconnect', () => {
-        console.log('Socket was disconnected');
-    });
-})
+const defaultNamespace = io.of('/');
+defaultNamespace.on('connection', (socket) => {
+    websocketController.registerDefaultConnection(defaultNamespace, socket);
+});
 
 // Middleware
 function logRequest(request, response, next) {
     console.log('Received ' + request.method + ' request for: ' + request.url);
     next();
-}
-
-function emitSharedAncestor(request, response) {
-    response.locals.io.sockets.emit('newAvailableAncestor', response.locals.ancestor);
-    response.send({ "success": true });
 }

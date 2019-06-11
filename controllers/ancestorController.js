@@ -12,18 +12,6 @@ function getAvailableAncestors(request, response) {
     })
 }
 
-function getAvailableAncestorsNoRequest(callback) {
-    ancestorModel.getAncestors(null, (error, ancestors) => {
-        if (error) {
-            console.error(error);
-            response.status(500).json({ success: false, error: err });
-            return;
-        }
-
-        callback(null, ancestors);
-    })
-}
-
 function getReservedAncestors(request, response) {
     var userId = request.params.userId
     ancestorModel.getAncestors(userId, (error, ancestors) => {
@@ -37,7 +25,7 @@ function getReservedAncestors(request, response) {
     })
 }
 
-function postAncestor(request, response) {
+function postAncestor(request, response, next) {
     var ancestorDto = {
         givenNames: request.body.givenNames,
         surname: request.body.surname,
@@ -114,6 +102,12 @@ function deleteAncestor(request, response) {
     })
 }
 
+/* Websocket Handlers */
+
+function handleShareAncestor(ancestor) {
+    console.log(ancestor);
+}
+
 function socketPostTest(request, response, next) {
     var ancestorDto = {
         "given_name": request.body.givenNames,
@@ -144,6 +138,5 @@ module.exports = {
     handlePostAncestor: postAncestor,
     handlePutAncestor: reserveAncestor,
     handleDeleteAncestor: deleteAncestor,
-    socketIOGetAvailable: getAvailableAncestorsNoRequest,
     socketPostTest: socketPostTest
 }
