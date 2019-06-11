@@ -8,7 +8,7 @@ function registerDefaultConnection(defaultNamespace, socket) {
             if (error) {
                 // Handle Error
                 console.error(error);
-                socket.emit('error', error);
+                socket.emit('shareError', error);
                 return;
             }
 
