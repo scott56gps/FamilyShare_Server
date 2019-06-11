@@ -1,3 +1,5 @@
+const ancestorController = require('./ancestorController');
+
 function registerDefaultConnection(defaultNamespace, socket) {
     console.log('Made a default connection');
 
