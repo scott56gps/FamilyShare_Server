@@ -35,46 +35,46 @@ function getAncestors(userId, callback) {
     });
 }
 
-function createAncestor(ancestorDto, templeCardDto, callback) {
-    // First, put the templeCard into AWS
-    aws.savePdfToAWS(templeCardDto, (awsError) => {
-        if (awsError) {
-            callback(awsError);
+function createAncestor(ancestorDto, callback) {
+    // Put the ancestor in the database
+    var givenNames = ancestorDto.givenNames
+    var surname = ancestorDto.surname
+    var ordinanceNeeded = ancestorDto.ordinanceNeeded
+    var familySearchId = ancestorDto.familySearchId
+    var gender = ancestorDto.gender
+
+    db.connectToDatabase((connectionError, client, done) => {
+        if (connectionError) {
+            callback(connectionError);
             return;
         }
 
-        // Now, put the ancestor in the database
-        var givenNames = ancestorDto.givenNames
-        var surname = ancestorDto.surname
-        var ordinanceNeeded = ancestorDto.ordinanceNeeded
-        var familySearchId = ancestorDto.familySearchId
-        var gender = ancestorDto.gender
+        var query = {
+            text: 'INSERT INTO ancestor(given_name, surname, ordinance_needed, user_id, fs_id, gender) VALUES ($1, $2, $3, NULL, $4, $5) RETURNING id, given_name, surname, ordinance_needed, user_id, fs_id, gender',
+            values: [givenNames, surname, ordinanceNeeded, familySearchId, gender]
+        }
 
-        db.connectToDatabase((connectionError, client, done) => {
-            if (connectionError) {
-                callback(connectionError);
+        db.queryDatabase(query, client, (ancestorError, ancestorResult) => {
+            if (ancestorError) {
+                done();
+                callback(ancestorError);
                 return;
             }
 
-            var query = {
-                text: 'INSERT INTO ancestor(given_name, surname, ordinance_needed, user_id, fs_id, gender) VALUES ($1, $2, $3, NULL, $4, $5) RETURNING id, given_name, surname, ordinance_needed, user_id, fs_id, gender',
-                values: [givenNames, surname, ordinanceNeeded, familySearchId, gender]
-            }
+            var ancestor = ancestorResult.rows[0];
 
-            db.queryDatabase(query, client, (ancestorError, ancestorResult) => {
-                if (ancestorError) {
-                    done();
-                    callback(ancestorError);
-                    return;
-                }
-
-                var ancestor = ancestorResult.rows[0];
-
-                done();
-                callback(null, ancestor);
-            })
+            done();
+            callback(null, ancestor);
         })
     })
+    // // First, put the templeCard into AWS
+    // aws.savePdfToAWS(templeCardDto, (awsError) => {
+    //     if (awsError) {
+    //         callback(awsError);
+    //         return;
+    //     }
+
+    // })
 }
 
 function reserveAncestor(ancestorId, userId, callback) {

@@ -98,7 +98,7 @@ function handleShareAncestor(ancestor, callback) {
     }
 
     // Put this Ancestor in the database
-    ancestorModel.createAncestor(ancestorDto, templeCardDto, (error, ancestor) => {
+    ancestorModel.createAncestor(ancestorDto, (error, ancestor) => {
         if (error) {
             // console.error(error);
             // response.status(500).json({ success: false, error: error });
