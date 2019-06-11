@@ -37,11 +37,6 @@ app.get('/ancestors/:userId', ancestorController.handleGetReserved);
 app.get('/templeCard/:ancestorId', ancestorController.handleGetTempleCard);
 
 app.post('/ancestor', upload.single('templePdf'), ancestorController.handlePostAncestor);
-// app.post('/ancestor', upload.single('templePdf'), (request, response, next) => {
-//     response.locals.io = io;
-
-//     .socketPostTest(request, response, next);
-// });
 app.post('/createUser', userController.handlePostUser);
 app.post('/login', userController.handleLoginUser);
 

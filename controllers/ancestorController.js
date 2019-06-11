@@ -100,8 +100,6 @@ function handleShareAncestor(ancestor, callback) {
     // Put this Ancestor in the database
     ancestorModel.createAncestor(ancestorDto, (error, ancestor) => {
         if (error) {
-            // console.error(error);
-            // response.status(500).json({ success: false, error: error });
             callback({ success: false, error: error }, null);
             return;
         }
@@ -111,29 +109,6 @@ function handleShareAncestor(ancestor, callback) {
     });
 }
 
-function socketPostTest(request, response, next) {
-    var ancestorDto = {
-        "given_name": request.body.givenNames,
-        surname: request.body.surname,
-        "ordinance_needed": request.body.ordinanceNeeded,
-        "fs_id": request.body.familySearchId,
-        gender: request.body.gender
-    }
-
-    // Create a Temple Card DTO
-    var templeCardDto = {
-        key:`${request.body.familySearchId}.pdf`,
-        value: request.file.buffer
-    }
-
-    console.log('ancestorDto', ancestorDto);
-    console.log('templeCardDto', templeCardDto);
-
-    ancestorDto.id = 0;
-    response.locals.ancestor = ancestorDto;
-    next();
-}
-
 module.exports = {
     handleGetAvailable: getAvailableAncestors,
     handleGetReserved: getReservedAncestors,
@@ -141,6 +116,5 @@ module.exports = {
     handlePostAncestor: postAncestor,
     handlePutAncestor: reserveAncestor,
     handleDeleteAncestor: deleteAncestor,
-    handleShareAncestor: handleShareAncestor,
-    socketPostTest: socketPostTest
+    handleShareAncestor: handleShareAncestor
 }
