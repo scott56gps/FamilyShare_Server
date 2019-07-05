@@ -1,7 +1,7 @@
 const ancestorController = require('./ancestorController');
 
-function registerDefaultConnection(defaultNamespace, socket) {
-    console.log('Made a default connection');
+function registerShareConnection(shareNamespace, socket) {
+    console.log('Made a share connection');
 
     socket.on('shareAncestor', (data) => {
         ancestorController.handleShareAncestor(data, (error, ancestor) => {
@@ -12,16 +12,34 @@ function registerDefaultConnection(defaultNamespace, socket) {
                 return;
             }
 
-            defaultNamespace.emit('newAvailableAncestor', ancestor);
+            shareNamespace.emit('newAvailableAncestor', ancestor);
             return;
         });
     })
 
     socket.on('disconnect', () => {
-        console.log('Socket was disconnected');
+        console.log('Share socket was disconnected');
+    });
+}
+
+function registerReserveConnection(reserveNamespace, socket) {
+    socket.on('reserveAncestor', (data) => {
+        ancestorController.handleReserveAncestor(data, (error, ancestor) => {
+            if (error) {
+                console.error(error);
+                socket.emit('reserveError', error);
+                return;
+            }
+
+            reserveNamespace.emit('ancestorReserved', ancestor);
+        });
+    });
+
+    socket.on('disconnect', () => {
+        console.log('Reserve socket was disconnected');
     });
 }
 
 module.exports = {
-    registerDefaultConnection: registerDefaultConnection
+    registerShareConnection: registerShareConnection
 }

@@ -44,9 +44,14 @@ app.put('/reserve', ancestorController.handlePutAncestor);
 
 app.delete('/ancestor', ancestorController.handleDeleteAncestor);
 
-const defaultNamespace = io.of('/');
-defaultNamespace.on('connection', (socket) => {
-    websocketController.registerDefaultConnection(defaultNamespace, socket);
+const shareNamespace = io.of('/share');
+const reserveNamespace = io.of('/reserve');
+
+shareNamespace.on('connection', (socket) => {
+    websocketController.registerShareConnection(shareNamespace, socket);
+});
+reserveNamespace.on('connection', (socket) => {
+    websocketController.registerReserveConnection(reserveNamespace, socket);
 });
 
 // Middleware
