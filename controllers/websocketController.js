@@ -41,5 +41,6 @@ function registerReserveConnection(reserveNamespace, socket) {
 }
 
 module.exports = {
-    registerShareConnection: registerShareConnection
+    registerShareConnection: registerShareConnection,
+    registerReserveConnection: registerReserveConnection
 }
