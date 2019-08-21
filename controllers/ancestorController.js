@@ -118,6 +118,21 @@ function handleShareAncestor(ancestor, callback) {
     });
 }
 
+function handleReserveAncestor(ancestorDto, callback) {
+    console.log(ancestorDto);
+
+    // Reserve this ancestor for this user
+    ancestorModel.reserveAncestor(ancestorDto.ancestorId, ancestorDto.userId, (error, ancestor) => {
+        if (error) {
+            callback({ success: false, error: error });
+            return;
+        }
+
+        callback(null, ancestor);
+        return;
+    });
+}
+
 module.exports = {
     handleGetAvailable: getAvailableAncestors,
     handleGetReserved: getReservedAncestors,

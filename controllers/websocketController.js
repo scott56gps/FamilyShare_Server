@@ -1,6 +1,6 @@
 const ancestorController = require('./ancestorController');
 
-function registerShareConnection(shareNamespace, socket) {
+function registerDefaultConnection(defaultNamespace, socket) {
     console.log('Made a share connection');
 
     socket.on('shareAncestor', (data) => {
@@ -12,17 +12,11 @@ function registerShareConnection(shareNamespace, socket) {
                 return;
             }
 
-            shareNamespace.emit('newAvailableAncestor', ancestor);
+            defaultNamespace.emit('newAvailableAncestor', ancestor);
             return;
         });
-    })
-
-    socket.on('disconnect', () => {
-        console.log('Share socket was disconnected');
     });
-}
 
-function registerReserveConnection(reserveNamespace, socket) {
     socket.on('reserveAncestor', (data) => {
         ancestorController.handleReserveAncestor(data, (error, ancestor) => {
             if (error) {
@@ -31,7 +25,27 @@ function registerReserveConnection(reserveNamespace, socket) {
                 return;
             }
 
-            reserveNamespace.emit('ancestorReserved', ancestor);
+            defaultNamespace.emit('ancestorReserved', ancestor);
+            return;
+        });
+    });
+
+    socket.on('disconnect', () => {
+        console.log('Share socket was disconnected');
+    });
+}
+
+function registerReserveConnection(defaultNamespace, socket) {
+    socket.on('reserveAncestor', (data) => {
+        ancestorController.handleReserveAncestor(data, (error, ancestor) => {
+            if (error) {
+                console.error(error);
+                socket.emit('reserveError', error);
+                return;
+            }
+
+            defaultNamespace.emit('ancestorReserved', ancestor);
+            return;
         });
     });
 
@@ -41,6 +55,6 @@ function registerReserveConnection(reserveNamespace, socket) {
 }
 
 module.exports = {
-    registerShareConnection: registerShareConnection,
-    registerReserveConnection: registerReserveConnection
+    registerDefaultConnection: registerDefaultConnection
+    // registerReserveConnection: registerReserveConnection
 }
