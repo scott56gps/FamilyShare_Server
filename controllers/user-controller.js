@@ -1,4 +1,4 @@
-const userModel = require('../models/userModel');
+const userModel = require('../models/user-model');
 
 function postUser(request, response) {
     var username = request.body.username;

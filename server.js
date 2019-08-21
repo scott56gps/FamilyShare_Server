@@ -3,9 +3,9 @@ const multer = require('multer')
 const app = express()
 
 // Bring in the Controllers
-const ancestorController = require('./controllers/ancestorController');
-const userController = require('./controllers/userController');
-const sseController = require('./controllers/sseController');
+const ancestorController = require('./controllers/ancestor-controller');
+const userController = require('./controllers/user-controller');
+const sseController = require('./controllers/sse-controller');
 
 // Configure body-parser
 const bodyParser = require('body-parser')

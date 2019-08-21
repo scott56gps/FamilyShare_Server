@@ -1,4 +1,4 @@
-const ancestorModel = require('../models/ancestorModel');
+const ancestorModel = require('../models/ancestor-model');
 const sseController = require('sseController');
 
 function getAvailableAncestors(request, response) {

@@ -1,5 +1,5 @@
-const db = require('./dbFunctions');
-const aws = require('./awsFunctions');
+const db = require('./db-functions');
+const aws = require('./aws-functions');
 
 function getAncestors(userId, callback) {
     db.connectToDatabase((connectionError, client, done) => {

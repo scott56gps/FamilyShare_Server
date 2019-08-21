@@ -1,4 +1,4 @@
-const db = require('./dbFunctions');
+const db = require('./db-functions');
 
 function createUser(username, callback) {
     db.connectToDatabase((connectionError, client, done) => {
