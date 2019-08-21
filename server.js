@@ -5,6 +5,7 @@ const app = express()
 // Bring in the Controllers
 const ancestorController = require('./controllers/ancestorController');
 const userController = require('./controllers/userController');
+const sseController = require('./controllers/sseController');
 
 // Configure body-parser
 const bodyParser = require('body-parser')
@@ -21,7 +22,17 @@ const upload = multer({
 const port = process.env.PORT || 5000;
 
 app.get('/', (request, response) => {
-    response.send("Welcome to the App!  This is an example database querying app with the potential to become the production server")
+    if (req.headers.accept && req.headers.accept == 'text/event-stream') {
+        var sseBody = sseController.createSSEBody('SSE Connection opened');
+        sseController.emitSSE(sseBody, response, (error) => {
+            if (error) {
+                console.error(error);
+                response.status(500).json({ success: false, error: error });
+            }
+        })
+    } else {
+        response.send("Welcome to the App!  This is an example database querying app with the potential to become the production server")
+    }
 })
 
 app.get('/ancestors', ancestorController.handleGetAvailable);
