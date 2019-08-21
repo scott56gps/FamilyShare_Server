@@ -1,4 +1,5 @@
 const ancestorModel = require('../models/ancestorModel');
+const sseController = require('sseController');
 
 function getAvailableAncestors(request, response) {
     ancestorModel.getAncestors(null, (error, ancestors) => {
@@ -9,7 +10,7 @@ function getAvailableAncestors(request, response) {
         }
 
         response.json(ancestors);
-    })
+    });
 }
 
 function getReservedAncestors(request, response) {
@@ -22,7 +23,7 @@ function getReservedAncestors(request, response) {
         }
 
         response.json(ancestors);
-    })
+    });
 }
 
 function postAncestor(request, response) {
@@ -32,13 +33,13 @@ function postAncestor(request, response) {
         ordinanceNeeded: request.body.ordinanceNeeded,
         familySearchId: request.body.familySearchId,
         gender: request.body.gender
-    }
+    };
 
     // Create a Temple Card DTO
     var templeCardDto = {
         key:`${request.body.familySearchId}.pdf`,
         value: request.file.buffer
-    }
+    };
 
     // Put this Ancestor in the database
     ancestorModel.createAncestor(ancestorDto, templeCardDto, (error, ancestor) => {
@@ -48,7 +49,20 @@ function postAncestor(request, response) {
             return;
         }
 
-        response.json(ancestor);
+        // response.json(ancestor);
+        // Stringify Ancestor
+        var ancestorString = JSON.stringify(ancestor);
+
+        // Create SSE Body
+        var sseBody = sseController.createSSEBody(ancestorString, 'new-ancestor');
+
+        // Emit the SSE
+        sseController.emitSSE(sseBody, response, (error) => {
+            if (error) {
+                console.error(error);
+                response.status(500).json({ success: false, error: error });
+            }
+        });
     });
 }
 
@@ -85,7 +99,7 @@ function getTempleCardForAncestor(request, response) {
             'Content-Length': templeCardDto.templeCard.length
         });
         response.end(templeCardDto.templeCard);
-    })
+    });
 }
 
 function deleteAncestor(request, response) {
@@ -99,7 +113,7 @@ function deleteAncestor(request, response) {
         }
 
         response.end();
-    })
+    });
 }
 
 module.exports = {
