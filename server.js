@@ -1,28 +1,28 @@
-const express = require('express')
-const multer = require('multer')
-const app = express()
+const express = require('express');
+const multer = require('multer');
+const app = express();
 
 // Bring in the Controllers
 const ancestorController = require('./controllers/ancestorController');
 const userController = require('./controllers/userController');
 
 // Configure body-parser
-const bodyParser = require('body-parser')
-app.use(bodyParser.json())
+const bodyParser = require('body-parser');
+app.use(bodyParser.json());
 app.use(logRequest);
 
 // Configure Multer
-var storage = multer.memoryStorage()
+var storage = multer.memoryStorage();
 
 const upload = multer({
     storage: storage
-})
+});
 
 const port = process.env.PORT || 5000;
 
 app.get('/', (request, response) => {
-    response.send("Welcome to the App!  This is an example database querying app with the potential to become the production server")
-})
+    response.send("Welcome to the App!  This is an example database querying app with the potential to become the production server");
+});
 
 app.get('/ancestors', ancestorController.handleGetAvailable);
 app.get('/ancestors/:userId', ancestorController.handleGetReserved);
@@ -43,5 +43,5 @@ function logRequest(request, response, next) {
 }
 
 app.listen(port, () => {
-    console.log(`Server now listening on port ${port}`)
-})
+    console.log(`Server now listening on port ${port}`);
+});
